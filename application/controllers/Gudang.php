@@ -41,6 +41,16 @@ class Gudang extends CI_Controller
         $data_barang = $this->M_barang->getBarangDetail($barang_id);
         $list_satuan = $this->M_barang->getSatuanBarangAll();
 
+        if ($data_barang['barang_satuan'] == 2) {
+            $harjul_hidden = 'block';
+            $xharjul = 'none';
+            $yharjul = 'block';
+        } else {
+            $harjul_hidden = 'none';
+            $xharjul = 'block';
+            $yharjul = 'none';
+        }
+
         $output = '';
         $output .= '<div class="form-group">
                                 <label for="kabar">Kode Barang ddd</label>
@@ -54,7 +64,7 @@ class Gudang extends CI_Controller
 
         $output .= '<div class="form-group">
                                 <label>Jenis Satuan</label>
-                                <select class="form-control form-control-sm" id="b_satuan_edit" name="b_satuan_edit">
+                                <select class="form-control form-control-sm" id="b_satuan_edit" name="b_satuan_edit" onchange="hide_harjul_edit()">
                                     <option value="' . $data_barang['barang_satuan'] . '">' . $data_barang['sat_barang_nama'] . '</option>';
         foreach ($list_satuan as $ls) {
             if ($ls['sat_barang_id'] == $data_barang['barang_satuan']) {
@@ -71,13 +81,22 @@ class Gudang extends CI_Controller
                                 <input value="' . $data_barang['barang_harpok'] . '" class="form-control form-control-sm" type="text" placeholder="Harga Pokok" id="b_harpok_edit" name="b_harpok_edit" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="satuan">Harga Jual</label>
+                                <label for="satuan" id="txharjul_edit" style="display: ' . $xharjul . ';">Harga Jual</label>
+                                <label for="satuan" id="tyharjul_edit" style="display: ' . $yharjul . ';">Harga Jual 1 (1-50 Lembar)</label>
                                 <input value="' . $data_barang['barang_harjul'] . '" class="form-control form-control-sm" type="text" placeholder="Harga Jual" id="b_harjul_edit" name="b_harjul_edit" autocomplete="off">
+                            </div>
+                            <div class="form-group" id="vharjul2_edit"  style="display: ' . $harjul_hidden . ';">
+                                <label for="satuan">Harga Jual 2 (51-100 Lembar)</label>
+                                <input value="' . $data_barang['barang_harjul2'] . '" class="form-control form-control-sm" type="text" placeholder="- masukan harga penjualan barang untuk cetak 51-100 lembar - " id="b_harjul2_edit" name="b_harjul2_edit" autocomplete="off">
+                            </div>
+                            <div class="form-group" id="vharjul3_edit" style="display: ' . $harjul_hidden . ';">
+                                <label for="satuan">Harga Jual 3 (> 100 Lemabr)</label>
+                                <input  value="' . $data_barang['barang_harjul3'] . '"class="form-control form-control-sm" type="text" placeholder="- masukan harga penjualan barang untuk cetak lebih dari 100 lembar -" id="b_harjul3_edit" name="b_harjul3_edit" autocomplete="off">
                             </div>
                             </div>
                         <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                         </div>';
         return $output;
     }
@@ -105,20 +124,33 @@ class Gudang extends CI_Controller
         $satuan = $this->input->post('b_satuan');
         $harpok = $this->input->post('b_harpok');
         $harjul = $this->input->post('b_harjul');
-        $stok = $this->input->post('b_stok');
-        $user_id = $user['user_id'];
-        if ($satuan == 3) {
-            $is_unlimited = 1;
+
+        if ($satuan == 2) {
+            $harjul2 = $this->input->post('b_harjul2');
+            $harjul3 = $this->input->post('b_harjul3');
         } else {
-            $is_unlimited = 0;
+            $harjul2 = '';
+            $harjul3 = '';
         }
 
-        $this->M_Barang->insertBarang(
+        $user_id = $user['user_id'];
+        $unlimited = $this->input->post('b_unlimited');
+        if ($unlimited == 1) {
+            $is_unlimited = 1;
+            $stok = 99;
+        } else {
+            $is_unlimited = 0;
+            $stok = $this->input->post('b_stok');
+        }
+
+        $this->M_barang->insertBarang(
             $id,
             $nama,
             $satuan,
             $harpok,
             $harjul,
+            $harjul2,
+            $harjul3,
             $stok,
             $user_id,
             $is_unlimited
@@ -144,22 +176,29 @@ class Gudang extends CI_Controller
         $satuan = $this->input->post('b_satuan_edit');
         $harpok = $this->input->post('b_harpok_edit');
         $harjul = $this->input->post('b_harjul_edit');
-        $user_id = $user['user_id'];
-        if ($satuan == 3) {
-            $is_unlimited = 1;
+        $harjul2 = $this->input->post('b_harjul2_edit');
+        $harjul3 = $this->input->post('b_harjul3_edit');
+
+        if ($satuan == 2) {
+            $harjul2 = $this->input->post('b_harjul2_edit');
+            $harjul3 = $this->input->post('b_harjul3_edit');
         } else {
-            $is_unlimited = 0;
+            $harjul2 = '';
+            $harjul3 = '';
         }
+        $user_id = $user['user_id'];
+
+
 
         $data_barang = [
             "barang_nama" => $nama,
             "barang_satuan" => $satuan,
             "barang_harpok" => $harpok,
             "barang_harjul" => $harjul,
+            "barang_harjul2" => $harjul2,
+            "barang_harjul3" => $harjul3,
             "barang_tgl_update" => date('Y-m-d H:i:s', time()),
             "barang_user_id" => $user_id,
-            "barang_is_unlimited" => $is_unlimited,
-
         ];
         $this->M_barang->updateBarang($data_barang, $id);
 

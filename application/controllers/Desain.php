@@ -13,15 +13,79 @@ class Desain extends CI_Controller
         }
     }
 
+    function index()
+    {
+        $data['user_nama'] = $this->session->userdata('user_nama');
+        $data['titel'] = "Dashboard Desain";
+        $data['jajal'] = "Desain";
+        $data['namamenu'] = "Desain";
+        $data['martis'] = "";
+        $this->load->view('Admin/header', $data);
+        $this->load->view('Admin/Menu', $data);
+        $this->load->view('Desain/desainDashboard', $data);
+        $this->load->view('Admin/footer');
+    }
+
     function inputTransaksi()
     {
         $data['user_nama'] = $this->session->userdata('user_nama');
-        $data['titel'] = "Persediaan";
-        $data['jajal'] = "Persediaan";
-        $data['namamenu'] = "Persediaan";
-        $data['martis'] = "Barang";
+        $user = $this->db->get_where('tbl_user', ['user_nama' =>
+        $this->session->userdata('user_nama')])->row_array();
+
+        //  Percobaan fungsi input transaksi
+        $kode_tanggal = 'T' . date('ymd', time());
+        $count_nota_today = $this->M_Transaksi->getTransaksiLikeId($kode_tanggal);
+        $antrian = $count_nota_today + 1;
+        if ($antrian < 10) {
+            $kode_antrian = "00" . $antrian;
+        } else if ($antrian < 100) {
+            $kode_antrian = "0" . $antrian;
+        }
+        $id_transaksi_raw = $kode_tanggal . $kode_antrian;
+        $transaksi_id = $id_transaksi_raw;
+
+        $p_id = time();
+        $p_nama = $this->input->post('p_nama');
+        $p_nohp = $this->input->post('p_nohp');
+
+        var_dump($p_id . $p_nama . $p_nohp);
+
+        $desain_id = $user['user_id'];
+        $total = 0;
+        $diskon = 0;
+        $diskon_status = 0;
+        $uang = 0;
+        $uang_status = 1;
+
+        // var_dump($id_transaksi);
+        // exit();
+
+        $this->M_Transaksi->insertPelanggan($p_id, $p_nama, $p_nohp);
+
+        $this->M_Transaksi->insertTransaksi(
+            $transaksi_id,
+            $desain_id,
+            $p_id,
+            $total,
+            $diskon,
+            $diskon_status,
+            $uang,
+            $uang_status
+        );
+
+        redirect('desain/ubahDetailTransaksi/' . $transaksi_id);
+    }
+
+    function ubahDetailTransaksi($transaksi_id)
+    {
+        $data['user_nama'] = $this->session->userdata('user_nama');
+        $data['titel'] = "Form Input Transaksi";
+        $data['jajal'] = "Desain";
+        $data['namamenu'] = "Desain";
+        $data['martis'] = "";
         $data['barang'] = $this->M_barang->getBarangAll();
-        $data['transaksi_id'] = 'T210224001';
+        $data['transaksi_id'] = $transaksi_id;
+        $data['transaksi'] = $this->M_Transaksi->getTransaksiByIdRow($transaksi_id);
 
         $this->load->view('Admin/header', $data);
         $this->load->view('Admin/Menu', $data);
@@ -38,10 +102,29 @@ class Desain extends CI_Controller
         }
         $id_transaksi_raw = $kode_tanggal . $kode_antrian;
         $id_transaksi = $id_transaksi_raw;
-
-
         // var_dump($count_nota_today);
         // var_dump($id_transaksi);
+    }
+
+    function actionUbahDetailTransaksi($transaksi_id)
+    {
+        $data_dtr = $this->M_Transaksi->getDetailTransaksiById($transaksi_id);
+        $tr_total = 0;
+        foreach ($data_dtr as $dtr) {
+            $tr_total = $tr_total + $dtr['dtr_total'];
+        }
+        $data_tr = [
+            "tr_total" => $tr_total
+        ];
+        $this->M_Transaksi->updateTransaksi($data_tr, $transaksi_id);
+
+        $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                       Terima Kasih, Transaksi atas nama <strong>Nama Pelanggan</strong> Berhasilkan diinputkan, silahkan melanjutan ke kasir proses pembayaran
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>');
+        redirect('desain');
     }
 
     function insertDetailTransaksi($transaksi_id)
@@ -50,8 +133,8 @@ class Desain extends CI_Controller
         $barang_id = $this->input->post('barang_id');;
         $barang = $this->M_barang->getBarangDetail($barang_id);
 
-        $panjang = 1;
-        $lebar = 1;
+        $panjang = 100;
+        $lebar = 100;
         $jumlah = 1;
         $harga = $barang['barang_harjul'];
         $total = $barang['barang_harjul'];
@@ -109,7 +192,7 @@ class Desain extends CI_Controller
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '"> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '"> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_jumlah" style="text-align: center;" type="text" value="' . $cl['dtr_jumlah'] . '"> </td>
-                                <td class="pt-3"> ' . $cl['dtr_harga'] . ' <input name="" id="dtr_harga" type="text" value="' . $cl['dtr_harga'] . '" hidden>  </td>
+                                <td class="pt-3" id="vdtr_harga"> ' . $cl['dtr_harga'] . ' <input name="" id="dtr_harga" type="text" value="' . $cl['dtr_harga'] . '" hidden>  </td>
                                 <td class="pt-3" id="vdtr_total">' . $cl['dtr_total'] . ' </td>
                                 <td> <a href="#" onclick="hapusKeranjang(' . $nmbr . ')" class="badge badge-danger btn_del' . $nmbr . '" data-detid="' . $cl['dtr_id'] . '" data-detnama="' . $cl['barang_nama'] . '">Hapus</a> </td>
                             </tr>';
@@ -119,7 +202,7 @@ class Desain extends CI_Controller
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '" hidden> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '" hidden> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_jumlah" style="text-align: center;" type="text" value="' . $cl['dtr_jumlah'] . '"> </td>
-                                <td class="pt-3"> ' . $cl['dtr_harga'] . ' <input name="" id="dtr_harga" type="text" value="' . $cl['dtr_harga'] . '" hidden>  </td>
+                                <td class="pt-3" id="vdtr_harga"> ' . $cl['dtr_harga'] . ' <input name="" id="dtr_harga" type="text" value="' . $cl['dtr_harga'] . '" hidden>  </td>
                                 <td class="pt-3" id="vdtr_total">' . $cl['dtr_total'] . ' </td>
                                 <td> <a href="#" onclick="hapusKeranjang(' . $nmbr . ')" class="badge badge-danger btn_del' . $nmbr . '" data-detid="' . $cl['dtr_id'] . '" data-detnama="' . $cl['barang_nama'] . '">Hapus</a> </td>
                             </tr>';
@@ -130,7 +213,7 @@ class Desain extends CI_Controller
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '" hidden> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_jumlah" style="text-align: center;" type="text" value="' . $cl['dtr_jumlah'] . '" hidden> </td>
                                 <td style="width:15%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_harga" style="text-align: left;" type="text" value="' . $cl['dtr_harga'] . '">  </td>
-                                <td class="pt-3" id="vdtr_total">' . $cl['dtr_total'] . ' </td>
+                                <td class="pt-3" id="vdtr_total" >' . $cl['dtr_total'] . ' </td>
                                 <td> <a href="#" onclick="hapusKeranjang(' . $nmbr . ')" class="badge badge-danger btn_del' . $nmbr . '" data-detid="' . $cl['dtr_id'] . '" data-detnama="' . $cl['barang_nama'] . '">Hapus</a> </td>
                             </tr>';
                 }
@@ -151,13 +234,39 @@ class Desain extends CI_Controller
 
     function updateDataKeranjang($detail_transaksi_id)
     {
+        $data_dtr = $this->M_Transaksi->getDetailTransaksiByIdRow($detail_transaksi_id);
+
+        $dtr_panjang = $this->input->post('dtr_panjang');
+        $dtr_lebar = $this->input->post('dtr_lebar');
+        $dtr_jumlah = $this->input->post('dtr_jumlah');
+        $dtr_harga = $this->input->post('dtr_harga');
+
+        if ($data_dtr['barang_satuan'] == 2) {
+            if ($dtr_jumlah <= 50) {
+                $harjul = $data_dtr['barang_harjul'];
+            } elseif ($dtr_jumlah <= 100) {
+                $harjul = $data_dtr['barang_harjul2'];
+            } else {
+                $harjul = $data_dtr['barang_harjul3'];
+            }
+        } elseif ($data_dtr['barang_satuan'] == 3) {
+            $harjul = $dtr_harga;
+        } else {
+            $harjul = $data_dtr['barang_harjul'];
+        }
+        $dtr_total = $dtr_panjang * $dtr_lebar / 10000 * $dtr_jumlah * $harjul;
+
         $data_dtr = [
-            "dtr_panjang" => $this->input->post('dtr_panjang'),
-            "dtr_lebar" =>  $this->input->post('dtr_lebar'),
-            "dtr_jumlah" =>  $this->input->post('dtr_jumlah'),
-            "dtr_total" =>  $this->input->post('dtr_total'),
+            "dtr_panjang" => $dtr_panjang,
+            "dtr_lebar" =>  $dtr_lebar,
+            "dtr_jumlah" =>  $dtr_jumlah,
+            "dtr_harga" =>  $harjul,
+            "dtr_total" =>  $dtr_total,
         ];
+        // var_dump($data_dtr);
+        // exit();
         $this->M_Transaksi->updateDetailTransaksi($data_dtr, $detail_transaksi_id);
+        echo $harjul;
     }
 
     function inputDT()

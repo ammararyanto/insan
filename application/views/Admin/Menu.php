@@ -90,9 +90,9 @@
                             </ul>
                         </li>
                         <li class="nav-item has-treeview">
-                            <a href="<?php echo base_url(); ?>desain/inputTransaksi" class="nav-link <?php if ($namamenu == "Desain") {
-                                                                                                            echo "active";
-                                                                                                        } ?>">
+                            <a href="<?php echo base_url(); ?>desain" class="nav-link <?php if ($namamenu == "Desain") {
+                                                                                            echo "active";
+                                                                                        } ?>">
                                 <i class=" nav-icon fas fa-palette"></i>
                                 <p>
                                     Desain
@@ -100,9 +100,9 @@
                             </a>
                         </li>
                         <li class="nav-item has-treeview">
-                            <a href="<?php echo base_url(); ?>Admin/Penjualan" class="nav-link <?php if ($namamenu == "Kasir") {
-                                                                                                    echo "active";
-                                                                                                } ?>">
+                            <a href="<?php echo base_url(); ?>Kasir" class="nav-link <?php if ($namamenu == "Kasir") {
+                                                                                            echo "active";
+                                                                                        } ?>">
                                 <i class="nav-icon fa fa-money-bill-alt"></i>
                                 <p>
                                     Kasir

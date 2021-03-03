@@ -57,6 +57,8 @@ class M_barang extends CI_Model
 		$satuan,
 		$harpok,
 		$harjul,
+		$harjul2,
+		$harjul3,
 		$stok,
 		$user_id,
 		$is_unlimited
@@ -68,6 +70,8 @@ class M_barang extends CI_Model
 			"barang_satuan" => $satuan,
 			"barang_harpok" => $harpok,
 			"barang_harjul" => $harjul,
+			"barang_harjul2" => $harjul2,
+			"barang_harjul3" => $harjul3,
 			"barang_stok" => $stok,
 			"barang_tgl_create" => $dtNow,
 			"barang_tgl_update" => $dtNow,

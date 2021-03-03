@@ -31,9 +31,21 @@ class M_Transaksi extends CI_Model
 		return $this->db->count_all_results();
 	}
 
+	function insertPelanggan($p_id, $p_nama, $p_nohp)
+	{
+		$dtNow = date('Y-m-d H:i:s', time());
+		$data = [
+			"p_id"   => $p_id,
+			"p_nama" => $p_nama,
+			"p_nohp" => $p_nohp,
+		];
+
+		$this->db->insert('tbl_pelanggan', $data);
+	}
 	function insertTransaksi(
 		$transaksi_id,
 		$desain_id,
+		$p_id,
 		$total,
 		$diskon,
 		$diskon_status,
@@ -45,6 +57,7 @@ class M_Transaksi extends CI_Model
 			"tr_id" => $transaksi_id,
 			"tr_kasir_id" => '',
 			"tr_desain_id" => $desain_id,
+			"tr_pelanggan_id" => $p_id,
 			"tr_tgl_masuk" => $dtNow,
 			"tr_tgl_update" => $dtNow,
 			"tr_tgl_selesai" => '',
@@ -109,9 +122,9 @@ class M_Transaksi extends CI_Model
 	function getTransaksiByIdRow($id_transaksi)
 	{
 		$this->db->select("*");
-		$this->db->from("tbl_jual");
-		$this->db->where('jual_nofak', $id_transaksi);
-		$this->db->join('tbl_user', 'tbl_user.user_id = tbl_jual.jual_user_id');
+		$this->db->from("tbl_transaksi");
+		$this->db->where('tr_id', $id_transaksi);
+		$this->db->join('tbl_pelanggan', 'tbl_pelanggan.p_id= tbl_transaksi.tr_pelanggan_id');
 		return $this->db->get()->row_array();
 	}
 
@@ -126,12 +139,24 @@ class M_Transaksi extends CI_Model
 		return $this->db->get()->result_array();
 	}
 
-	function getTransaksiByTime($time_start, $time_end)
+	function getDetailTransaksiByIdRow($dtr_id)
 	{
 		$this->db->select("*");
-		$this->db->from("tbl_jual");
+		$this->db->from("tbl_detail_transaksi");
+		$this->db->where('dtr_id', $dtr_id);
+		$this->db->join('tbl_barang', 'tbl_barang.barang_id = tbl_detail_transaksi.dtr_barang_id');
+		return $this->db->get()->row_array();
+	}
 
-		$this->db->join('tbl_user', 'tbl_user.user_id = tbl_jual.jual_user_id');
+	function getTransaksiBelumDiambil()
+	{
+		$this->db->select("*");
+		$this->db->from("tbl_transaksi");
+		$this->db->where('tr_status_pengerjaan < 3');
+		$this->db->join('tbl_status_transaksi', 'tbl_status_transaksi.s_tr_id = tbl_transaksi.tr_status_pengerjaan');
+		$this->db->join('tbl_status_pembayaran', 'tbl_status_pembayaran.s_pmb_id = tbl_transaksi.tr_status_pembayaran');
+		$this->db->join('tbl_pelanggan', 'tbl_pelanggan.p_id= tbl_transaksi.tr_pelanggan_id');
+		// $this->db->order_by('tr_tgl_masuk', 'ASC');
 		return $this->db->get()->result_array();
 	}
 }

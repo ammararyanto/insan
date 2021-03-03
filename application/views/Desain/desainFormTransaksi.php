@@ -19,66 +19,17 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-5 col-sm-12" hidden>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title ">Silahkan cari barang disini</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-12 ">
-                                    <!-- Untuk menampilkan data barang yang dicari -->
-                                    <div class="row mt-4">
-                                        <div class="col-md-12 overflow-auto" style="max-height: 450px; min-height : 20px ;">
-                                            <!-- <div class="row" id="resultBarang">
 
-
-                                            </div> -->
-                                            <!-- <div class="row">
-                                                <div class="col-lg-12">
-                                                    <table id="example1" class="table table-bordered table-striped">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Nama Barang</th>
-                                                                <th style="width:20%">Harga</th>
-                                                                <th style="width:10%">Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <?php
-                                                        $nmbr = 0;
-                                                        foreach ($barang as $brg) {
-                                                            $nmbr =  $nmbr + 1; ?>
-                                                            <tr>
-                                                                <td><?= $brg['barang_nama'] ?></td>
-                                                                <td><?= $brg['barang_harjul'] ?></td>
-                                                                <td><button type="button" onclick="tambahKeranjang(<?= $nmbr ?>)" class="ml-3 btn btn-sm btn-primary btn_add<?= $nmbr ?>" name="btn_add" data-barangid="<?= $brg['barang_id'] ?>"><i class="fas fa-fw fa-plus"></i> </button></td>
-                                                            </tr>
-                                                        <?php } ?>
-                                                    </table>
-                                                </div>
-                                                <div class="card-body">
-
-                                                </div>
-                                            </div> -->
-                                        </div>
-                                        <!-- Untuk menampilkan apabila barang tidak ditemukan -->
-
-
-                                    </div>
-
-
-
-                                </div>
-                            </div>
-
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <button type="button" class="btn btn-primary mb-3" onclick="tampilModal()">
+                                <i class="fas fa-plus"> </i> Tambah Produk atau Layanan
+                            </button>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-12">
 
-                    <button type="button" class="btn btn-primary mb-3" onclick="tampilModal()">
-                        <i class="fas fa-plus"> </i> Tambah Produk atau Layanan
-                    </button>
+
 
                     <div class="modal fade" id="modal-default" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:700px; ">
@@ -121,158 +72,119 @@
                         </div>
                     </div>
 
-                    <form action="" method="POST">
-                        <div class="row">
-                            <div class="col-lg-12 col-sm-12">
-                                <input id="nomor" type="text" value="0" hidden>
-                                <input id="total" type="text" value="0" hidden>
 
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Detail Pembelian</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-12" id="virtual_cart">
-
-                                            </div>
-
-                                            <div class="col-lg-12" id="cart_col">
-                                                <!-- Isi Keranjang  -->
-                                            </div>
-
-                                            <!-- <div class="col-lg-12" id="" style="display:block"> -->
-                                            <!-- <table class="table" id="cartTable"> -->
-                                            <!-- <thead> -->
-                                            <!-- <tr> -->
-                                            <!-- <th style=" width: 10px">#</th> -->
-                                            <!-- <th>Nama Barang</th>
-                                                            <th style="width:15%">Panjang</th>
-                                                            <th style="width:15%">Lebar</th>
-                                                            <th>Jumlah Cetak</th>
-                                                            <th>Harga satuan</th>
-                                                            <th>Total Harga</th>
-                                                            <th>Action</th> -->
-                                            <!-- </tr> -->
-                                            <!-- </thead> -->
-                                            <!-- <tbody id="tbKeranjang"> -->
-                                            <!-- <tr class="records" id="">
-                                                            <td class="pt-3"> Banner Premium <input name="" type="text" value="" hidden></td>
-                                                            <td style="width:15%"> <input class=" form-control form-control-sm" onkeyup="" onchange="" name="" id="" style="text-align: center;" type="text" value=""> </td>
-                                                            <td style="width:15%"> <input class=" form-control form-control-sm" onkeyup="" onchange="" name="" id="" style="text-align: center;" type="text" value=""> </td>
-                                                            <td style="width:15%"> <input class=" form-control form-control-sm" onkeyup="" onchange="" name="" id="" style="text-align: center;" type="text" value=""> </td>
-                                                            <td class="pt-3"> 10.000 <input name="" id="" type="text" value="" hidden> <input name="" id="" type="text" value="" hidden> </td>
-                                                            <td class="pt-3" id="">30.000</td>
-                                                            <td> <a href="#" onclick="deleteRow(this)" class="badge badge-danger">Hapus</a> </td>
-                                                        </tr> -->
-
-                                            <!-- <tr class="records" id="">
-                                                            <td class="pt-3"> Ivory A3 Basic <input name="" type="text" value="" hidden></td>
-                                                            <td style="width:15%"></td>
-                                                            <td style="width:15%"></td>
-                                                            <td style="width:15%"> <input class=" form-control form-control-sm" onkeyup="" onchange="" name="" id="" style="text-align: center;" type="text" value=""> </td>
-                                                            <td class="pt-3"> 10.000 <input name="" id="" type="text" value="" hidden> <input name="" id="" type="text" value="" hidden> </td>
-                                                            <td class="pt-3" id="">30.000</td>
-                                                            <td> <a href="#" onclick="deleteRow(this)" class="badge badge-danger">Hapus</a> </td>
-                                                        </tr> -->
-
-                                            <!-- <tr class="records" id="">
-                                                            <td class="pt-3"> Jasa Desain <input name="" type="text" value="" hidden></td>
-                                                            <td style="width:15%"></td>
-                                                            <td style="width:15%"></td>
-                                                            <td class="pt-3"> </td>
-                                                            <td style="width:15%"> <input class=" form-control form-control-sm" onkeyup="" onchange="" name="" id="" style="text-align: center;" type="text" value=""> </td>
-                                                            <td class="pt-3" id="">30.000</td>
-                                                            <td> <a href="#" onclick="deleteRow(this)" class="badge badge-danger">Hapus</a> </td>
-                                                        </tr> -->
-
-                                            <!-- </tbody> -->
-                                            <!-- </table> -->
-                                            <!-- </div> -->
-
-                                            <div class="col-lg-12" id="tb_Detail" style="display:none">
-                                                <table class="table" id="cartTable">
-                                                    <thead>
-                                                        <tr>
-                                                            <!-- <th style=" width: 10px">#</th> -->
-                                                            <th>Item</th>
-                                                            <th>Qty</th>
-                                                            <th>Harga Satuan</th>
-                                                            <th>Total</th>
-                                                            <th>Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="tbKeranjang">
-
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-
-                                        </div>
-                                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Data Pelanggan</h3>
                                 </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Form Pembayaran</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="callout callout-info py-1">
-                                                    <p class="mb-1">Total Biaya </p>
-                                                    <h5 id="display_total" class="mb-1 font-weight-bold">0</h5>
-                                                </div>
-                                            </div>
-
-
-                                        </div>
-                                        <div class="row align-items-end" hidden>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="col-form-label-sm" for="diskon">Diskon</label>
-                                                    <input type="text" class="form-control diskon" id="diskon" name="diskon" value="" placeholder="0">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-auto">
-                                                <div class="form-inline ml-0 mb-4">
-                                                    <div class="custom-control custom-radio">
-                                                        <input type="radio" id="nominal" name="discnom" value="0" class="custom-control-input discnom">
-                                                        <label class="custom-control-label" for="nominal">Rp</label>
-                                                    </div>
-                                                    <div class="custom-control custom-radio ml-3">
-                                                        <input type="radio" id="prosentase" name="discnom" value="1" class="custom-control-input discnom" checked>
-                                                        <label class="custom-control-label" for="prosentase">%</label>
-                                                    </div>
-                                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="callout callout-info py-1">
+                                                <p class="mb-1">Total Biaya </p>
+                                                <h5 id="display_total" class="mb-1 font-weight-bold"><?= money($transaksi['tr_total']) ?></h5>
                                             </div>
                                         </div>
-
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label class="col-form-label-sm" for="nama">Nominal Tunai</label>
-                                                    <input type="text font-weight-bold" class="form-control uang_cash" id="uang_cash" name="uang_cash" value="" placeholder="0">
-                                                    <small class="text-danger"><?= form_error('uang_cash') ?></small>
-                                                </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label-sm" for="nama">Nama Pelanggan</label>
+                                                <input type="text font-weight-bold" class="form-control uang_cash" id="uang_cash" name="uang_cash" value="<?= $transaksi['p_nama'] ?>" placeholder="0" disabled>
                                             </div>
                                         </div>
-
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <input type="submit" value="Proses Pembayaran" class="ml-3 btn btn-success float-right">
-                                                <a href="<?= base_url('admin') ?>" class="btn btn-secondary float-right">Batal</a>
-
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label-sm" for="nama">Nomor HP</label>
+                                                <input type="text font-weight-bold" class="form-control uang_cash" id="uang_cash" name="uang_cash" value="<?= $transaksi['p_nohp'] ?>" placeholder="0" disabled>
                                             </div>
                                         </div>
 
                                     </div>
                                 </div>
+                                <!-- /.card-body -->
                             </div>
                         </div>
-                    </form>
+                        <div class="col-lg-9 col-sm-12">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Detail Pembelian</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+
+                                                <div class="col-lg-12" id="cart_col">
+                                                    <!-- Isi Keranjang  -->
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <form action="<?= base_url() ?>desain/actionUbahDetailTransaksi/<?= $transaksi['tr_id'] ?>" method="POST">
+                                        <input type="text font-weight-bold" class="form-control" id="tr_total_harga" name="tr_total_harga" value="<?= $transaksi['tr_total'] ?>" hidden>
+
+                                        <input type="submit" value="Proses Transaksi" class="ml-3 btn btn-success float-right">
+                                        <a href="<?= base_url('admin') ?>" class="btn btn-secondary float-right">Batal</a>
+
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- <div class="col-lg-6 col-sm-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Form Pembayaran</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                    </div>
+                                    <div class="row align-items-end" hidden>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label-sm" for="diskon">Diskon</label>
+                                                <input type="text" class="form-control diskon" id="diskon" name="diskon" value="" placeholder="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-auto">
+                                            <div class="form-inline ml-0 mb-4">
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" id="nominal" name="discnom" value="0" class="custom-control-input discnom">
+                                                    <label class="custom-control-label" for="nominal">Rp</label>
+                                                </div>
+                                                <div class="custom-control custom-radio ml-3">
+                                                    <input type="radio" id="prosentase" name="discnom" value="1" class="custom-control-input discnom" checked>
+                                                    <label class="custom-control-label" for="prosentase">%</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-form-label-sm" for="nama">Nominal Tunai</label>
+                                                <input type="text font-weight-bold" class="form-control uang_cash" id="uang_cash" name="uang_cash" value="" placeholder="0">
+                                                <small class="text-danger"><?= form_error('uang_cash') ?></small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+
                 </div>
 
             </div>
@@ -301,9 +213,6 @@
 <script src="<?php echo base_url(); ?>assets/plugins/toastr/toastr.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/plugins/sweetalert2/sweetalert2.min.js"></script>
 <script>
-    $(document).ready(function() {
-        totalharga();
-    });
     $('#cart_col').load("<?php echo base_url() ?>desain/tampilIsiKeranjang/<?= $transaksi_id ?>");
     $(function() {
         $("#example1").DataTable({
@@ -335,6 +244,8 @@
                     title: barang_nama + ' berhasil ditambahkan'
                 })
                 $('#cart_col').html(data);
+                totalharga();
+
             }
         });
 
@@ -381,12 +292,12 @@
     function sum(urutan) {
         var $rows = $('#row' + urutan);
         // alert('Hore berhasill');
-        var $panjang = parseInt($($rows).find('#dtr_panjang').val());
         var $dtr_id = parseInt($($rows).find('#dtr_id').val());
+        var $panjang = parseInt($($rows).find('#dtr_panjang').val());
         var $lebar = parseInt($($rows).find('#dtr_lebar').val());
         var $jumlah = parseInt($($rows).find('#dtr_jumlah').val());
         var $harga = parseInt($($rows).find('#dtr_harga').val());
-        var $subtot = $panjang * $lebar * $jumlah * $harga;
+
 
         $.ajax({
             url: "<?= base_url(); ?>desain/updateDataKeranjang/" + $dtr_id,
@@ -395,31 +306,33 @@
                 dtr_panjang: $panjang,
                 dtr_lebar: $lebar,
                 dtr_jumlah: $jumlah,
-                dtr_total: $subtot,
-
+                dtr_harga: $harga,
             },
             success: function(data) {
-                alert(" Dihapus Dari Keranjang ");
+                var $harjul = data;
+
+                var $subtot = $panjang * $lebar * $jumlah * $harjul / 10000;
+                // alert($harjul);
+                if (!isNaN($subtot)) {
+                    $($rows).find('#vdtr_harga').html($harjul);
+                    $($rows).find('#vdtr_total').html($subtot);
+
+                    $($rows).find('#dtr_harga').val($harjul);
+                    $($rows).find('#dtr_total').val($subtot);
+
+                    // var total=$subtot;  	
+                    totalharga();
+                } else {
+                    $($rows).find('#vdtr_harga').html($harjul);
+                    $($rows).find('#vdtr_total').html($subtot);
+
+                    $($rows).find('#dtr_harga').val($harjul);
+                    $($rows).find('#dtr_total').val($subtot);
+                    //var total='0';  	
+                    totalharga();
+                }
             }
         });
-
-        if (!isNaN($subtot)) {
-            $($rows).find('#vdtr_total').html($subtot);
-            // $('#total' + urutan).html($subtot);
-            $($rows).find('#dtr_total').val($subtot);
-
-            // var total=$subtot;  	
-            totalharga();
-        } else {
-            // $($rows).find('#barang_total').val('0');
-            // $('#total' + urutan).html($subtot);
-            $($rows).find('#vdtr_total').html($subtot);
-
-            $($rows).find('#dtr_total').val($subtot);
-            //var total='0';  	
-            totalharga();
-        }
-
     };
 
     function totalharga() {
@@ -428,7 +341,6 @@
         $(".records").each(function() {
             var $jumlah = $(this).find('#dtr_total').val();
             sum += parseInt($jumlah);
-
         });
 
         var number_string = sum.toString(),
@@ -442,8 +354,7 @@
         }
 
         $("#display_total").html(rupiah);
-
-        // $('#totals').val(rupiah);
+        $('#tr_total_harga').val(sum);
         // $('#hoho').val(sum);
     };
 
