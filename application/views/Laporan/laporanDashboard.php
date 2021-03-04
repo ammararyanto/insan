@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Dashboard</h1>
+                    <h1 class="m-0 text-dark">Menu Isi Sedang Dalam Masa Pengembangan :)</h1>
                 </div><!-- /.col -->
 
             </div>
@@ -17,50 +17,7 @@
                 <div class="col-lg-12">
                     <?= $this->session->flashdata('message'); ?>
                 </div>
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <a href="#" class="small-box bg-info" onclick="inputPelanggan()">
-                        <div class="inner">
-                            <h4 class="mt-3">Input</h4>
-                            <h5>Transaksi Baru</h5>
 
-                            <p> </p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-plus-square"></i>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <a href="" class="small-box bg-success">
-                        <div class="inner">
-                            <h4 class="mt-3">Daftar</h4>
-                            <h5>Transaksi Proses</h5>
-
-                            <p> </p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-clipboard-list"></i>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <a href="" class="small-box bg-success">
-                        <div class="inner">
-                            <h4 class="mt-3">Daftar</h4>
-                            <h5>Transaksi Selesai</h5>
-
-                            <p> </p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-clipboard-list"></i>
-                        </div>
-                    </a>
-                </div>
             </div>
             <div class="modal fade" id="modal-pelanggan">
                 <form action=<?= base_url('desain/inputTransaksi') ?> method="POST">

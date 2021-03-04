@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Daftar Transaksi Belum Diambil</h1>
+                    <h1 class="m-0 text-dark"><?= $titel ?></h1>
                 </div><!-- /.col -->
 
             </div>
@@ -104,7 +104,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Ubah Data Barang</h4>
+                        <h4 class="modal-title">Detail Transaksi</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

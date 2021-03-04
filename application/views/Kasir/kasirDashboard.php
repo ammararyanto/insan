@@ -22,35 +22,35 @@
                     <!-- small box -->
                     <a href="<?= base_url() ?>kasir/transaksiBelumDiambil" class="small-box bg-info">
                         <div class="inner">
-                            <h3 class="mt-3">12</h3>
-                            <h5>Belum Dibayar</h5>
+                            <h3 class="mt-3"><?= $count_belum_diambil ?></h3>
+                            <h5>Belum Diambil</h5>
 
                             <p> </p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-bag"></i>
+                            <i class="fas fa-file-invoice"></i>
                         </div>
                     </a>
                 </div>
 
                 <div class="col-lg-3 col-6">
                     <!-- small box -->
-                    <a href="" class="small-box bg-success">
+                    <a href="<?= base_url() ?>kasir/transaksiSudahDiambil" class="small-box bg-info">
                         <div class="inner">
-                            <h3 class="mt-3">14</h3>
-                            <h5>Sudah Dibayar</h5>
+                            <h3 class="mt-3"><?= $count_sudah_diambil ?></h3>
+                            <h5>Sudah Diambil</h5>
 
                             <p> </p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-bag"></i>
+                            <i class="fas fa-file-invoice"></i>
                         </div>
                     </a>
                 </div>
 
                 <div class="col-lg-3 col-6">
                     <!-- small box -->
-                    <a href="" class="small-box bg-success py-2">
+                    <a href="<?= base_url() ?>kasir/daftarHargaGudang" class="small-box bg-success py-2">
                         <div class="inner">
                             <h4 class="mt-3">Daftar</h4>
                             <h5>Harga Gudang</h5>
@@ -58,7 +58,7 @@
                             <p> </p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-bag"></i>
+                            <i class="fas fa-warehouse"></i>
                         </div>
                     </a>
                 </div>

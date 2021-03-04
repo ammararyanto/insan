@@ -64,7 +64,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?php echo base_url(); ?>gudang/dataBarang" class="nav-link <?php if ($martis == "Barang") {
+                                    <a href="<?php echo base_url(); ?>gudang/dataBarang" class="nav-link <?php if ($martis == "data_gudang") {
                                                                                                                 echo "active";
                                                                                                             } ?>">
                                         <i class="far fa-circle nav-icon"></i>
@@ -72,19 +72,19 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo base_url(); ?>Admin/Pembelian" class="nav-link <?php if ($martis == "Pembelian") {
-                                                                                                            echo "active";
-                                                                                                        } ?>">
+                                    <a href="<?php echo base_url(); ?>gudang/barangMasuk" class="nav-link <?php if ($martis == "barang_masuk") {
+                                                                                                                echo "active";
+                                                                                                            } ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Barang Masuk</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo base_url(); ?>Admin/Stok" class="nav-link <?php if ($martis == "Stok") {
-                                                                                                        echo "active";
-                                                                                                    } ?>">
+                                    <a href="<?php echo base_url(); ?>gudang/pengeluaran" class="nav-link <?php if ($martis == "pengeluaran") {
+                                                                                                                echo "active";
+                                                                                                            } ?>">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Barang Keluar</p>
+                                        <p>Pengeluaran</p>
                                     </a>
                                 </li>
                             </ul>
@@ -110,9 +110,9 @@
                             </a>
                         </li>
                         <li class="nav-item has-treeview">
-                            <a href="<?php echo base_url(); ?>Admin/Laporan" class="nav-link <?php if ($namamenu == "Laporan") {
-                                                                                                    echo "active";
-                                                                                                } ?>">
+                            <a href="<?php echo base_url(); ?>Laporan" class="nav-link <?php if ($namamenu == "Laporan") {
+                                                                                            echo "active";
+                                                                                        } ?>">
                                 <i class="nav-icon fas fa-chart-bar"></i>
                                 <p>
                                     Laporan

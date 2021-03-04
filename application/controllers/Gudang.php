@@ -19,14 +19,14 @@ class Gudang extends CI_Controller
         $data['titel'] = "Persediaan";
         $data['jajal'] = "Persediaan";
         $data['namamenu'] = "Persediaan";
-        $data['martis'] = "Barang";
+        $data['martis'] = "data_gudang";
         $data['barang'] = $this->M_barang->getBarangAll();
         $data['satuan_barang'] = $this->M_barang->getSatuanBarangAll();
         // var_dump($data['satuan_barang']);
         // exit();
         $this->load->view('Admin/header', $data);
         $this->load->view('Admin/Menu', $data);
-        $this->load->view('Gudang/listBarang', $data);
+        $this->load->view('Gudang/gudangListBarang', $data);
         $this->load->view('Admin/footer');
     }
 
@@ -188,8 +188,6 @@ class Gudang extends CI_Controller
         }
         $user_id = $user['user_id'];
 
-
-
         $data_barang = [
             "barang_nama" => $nama,
             "barang_satuan" => $satuan,
@@ -210,6 +208,99 @@ class Gudang extends CI_Controller
                     </div>');
         redirect('gudang/dataBarang');
     }
+
+    function barangMasuk()
+    {
+        $data['user_nama'] = $this->session->userdata('user_nama');
+        $data['titel'] = "Persediaan";
+        $data['jajal'] = "Persediaan";
+        $data['namamenu'] = "Persediaan";
+        $data['martis'] = "data_gudang";
+        $data['barang'] = $this->M_barang->getBarangAll();
+        $data['satuan_barang'] = $this->M_barang->getSatuanBarangAll();
+        // var_dump($data['satuan_barang']);
+        // exit();
+        $this->load->view('Admin/header', $data);
+        $this->load->view('Admin/Menu', $data);
+        $this->load->view('Gudang/gudangBarangMasuk', $data);
+        $this->load->view('Admin/footer');
+    }
+
+    function tampilDetailStok($barang_id)
+    {
+        echo $this->detailStokBarang($barang_id);
+    }
+
+    function detailStokBarang($barang_id)
+    {
+        $data_barang = $this->M_barang->getBarangDetail($barang_id);
+
+        $output = '';
+        $output .= '<div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="satuan" id="vnama-fitur">Nama Barang</label>
+                                        <input value="' . $data_barang['barang_id'] . '" class="form-control form-control-sm" type="text" placeholder="" id="b_id" name="b_id" autocomplete="off" hidden>
+                                        <input value="' . $data_barang['barang_nama'] . '" class="form-control form-control-sm" type="text" placeholder="" id="b_nama" name="b_nama" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="satuan">Stok Terkini</label>
+                                        <input value="' . $data_barang['barang_stok'] . '"  class="form-control form-control-sm" type="text" placeholder="" id="" name="" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="satuan" id="vnama-stok">Stok Ditambahkan</label>
+                                        <input class="form-control form-control-sm" type="text" placeholder="" id="b_stok_ubah" name="b_stok_ubah" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>';
+        return $output;
+    }
+
+    function tambahStok()
+    {
+        $barang_id = $this->input->post('b_id');
+        $stok_tambah = $this->input->post('b_stok_ubah');
+        $brg = $this->M_barang->getBarangDetail($barang_id);
+        var_dump($brg);
+        var_dump($stok_tambah);
+
+        $stok_terkini = $brg['barang_stok'] + $stok_tambah;
+        var_dump($stok_terkini);
+        $data_barang = [
+            "barang_stok" => $stok_terkini,
+        ];
+        $this->M_barang->updateBarang($data_barang, $barang_id);
+
+        $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                        Stok <strong>' . $brg['barang_nama'] . ' </strong> berhasil ditambahkan 
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>');
+        redirect('gudang/barangMasuk');
+    }
+
+    function pengeluaran()
+    {
+        $data['user_nama'] = $this->session->userdata('user_nama');
+        $data['titel'] = "Persediaan";
+        $data['jajal'] = "Persediaan";
+        $data['namamenu'] = "Persediaan";
+        $data['martis'] = "pengeluaran";
+        $data['barang'] = $this->M_barang->getBarangAll();
+        $data['satuan_barang'] = $this->M_barang->getSatuanBarangAll();
+        // var_dump($data['satuan_barang']);
+        // exit();
+        $this->load->view('Admin/header', $data);
+        $this->load->view('Admin/Menu', $data);
+        $this->load->view('Gudang/gudangPengeluaran', $data);
+        $this->load->view('Admin/footer');
+    }
+
 
     function inputBarangx()
     {
