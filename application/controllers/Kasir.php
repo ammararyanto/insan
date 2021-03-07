@@ -79,7 +79,7 @@ class Kasir extends CI_Controller
 			$uang_status
 		);
 
-		redirect('kasir/ubahDetailTransaksi/' . $transaksi_id);
+		redirect('Kasir/ubahDetailTransaksi/' . $transaksi_id);
 	}
 
 	function ubahDetailTransaksi($transaksi_id)
@@ -95,7 +95,7 @@ class Kasir extends CI_Controller
 
 		$this->load->view('Admin/header', $data);
 		$this->load->view('Admin/Menu', $data);
-		$this->load->view('kasir/kasirDetailTransaksi', $data);
+		$this->load->view('Kasir/kasirDetailTransaksi', $data);
 		$this->load->view('Admin/footer');
 
 		$kode_tanggal = 'T' . date('ymd', time());
@@ -133,7 +133,7 @@ class Kasir extends CI_Controller
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>');
-		redirect('kasir/ubahPembayaran/' . $transaksi_id);
+		redirect('Kasir/ubahPembayaran/' . $transaksi_id);
 	}
 
 	function insertDetailTransaksi($transaksi_id)
@@ -409,7 +409,7 @@ class Kasir extends CI_Controller
 		if ($data_tr['tr_status_pengerjaan'] == 2) {
 		} else {
 			$output .= ' <div class="col-lg-12">
-								<form action="' . base_url() . 'kasir/ubahPembayaran/' . $transaksi_id . '" method="POST">
+								<form action="' . base_url() . 'Kasir/ubahPembayaran/' . $transaksi_id . '" method="POST">
                                     <input type="submit" value="Proses Pembayaran" class="ml-3 btn btn-success float-right">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
 								</form>
@@ -583,7 +583,7 @@ class Kasir extends CI_Controller
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>');
-		redirect('kasir/ubahPembayaran/' . $transaksi_id);
+		redirect('Kasir/ubahPembayaran/' . $transaksi_id);
 	}
 
 	function actionAmbil($transaksi_id)
@@ -596,14 +596,14 @@ class Kasir extends CI_Controller
 			"tr_tgl_selesai" => $dtNow,
 		];
 		$this->M_Transaksi->updateTransaksi($data_tr, $transaksi_id);
-		redirect('kasir/cetakNota/' . $transaksi_id);
+		redirect('Kasir/cetakNota/' . $transaksi_id);
 		// $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
 		//                Terima Kasih, Pengambilan Transaksi atas nama <strong>' . $transaksi['p_nama'] . '</strong> Telah Berhasil Dikonfirmasi
 		//                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
 		//                     <span aria-hidden="true">&times;</span>
 		//                 </button>
 		//             </div>');
-		// redirect('kasir/ubahPembayaran/' . $transaksi_id);
+		// redirect('Kasir/ubahPembayaran/' . $transaksi_id);
 	}
 
 	function actionHutang($transaksi_id)
@@ -622,7 +622,7 @@ class Kasir extends CI_Controller
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>');
-		redirect('kasir/ubahPembayaran/' . $transaksi_id);
+		redirect('Kasir/ubahPembayaran/' . $transaksi_id);
 	}
 
 	function cetakNota($transaksi_id)
