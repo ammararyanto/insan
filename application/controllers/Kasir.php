@@ -22,6 +22,7 @@ class Kasir extends CI_Controller
 		$data['martis'] = "";
 		$data['count_belum_diambil'] = count($this->M_Transaksi->getTransaksiBelumDiambil());
 		$data['count_sudah_diambil'] = count($this->M_Transaksi->getTransaksiSudahDiambil());
+		$data['count_hutang'] = count($this->M_Transaksi->getTransaksiHutang());
 		// var_dump($data['count_belum_diambil']);
 
 		// exit();
@@ -29,6 +30,254 @@ class Kasir extends CI_Controller
 		$this->load->view('Admin/Menu', $data);
 		$this->load->view('Kasir/kasirDashboard', $data);
 		$this->load->view('Admin/footer');
+	}
+
+	function inputTransaksi()
+	{
+		$data['user_nama'] = $this->session->userdata('user_nama');
+		$user = $this->db->get_where('tbl_user', ['user_nama' =>
+		$this->session->userdata('user_nama')])->row_array();
+
+		//  Percobaan fungsi input transaksi
+		$kode_tanggal = 'T' . date('ymd', time());
+		$count_nota_today = $this->M_Transaksi->getTransaksiLikeId($kode_tanggal);
+		$antrian = $count_nota_today + 1;
+		if ($antrian < 10) {
+			$kode_antrian = "00" . $antrian;
+		} else if ($antrian < 100) {
+			$kode_antrian = "0" . $antrian;
+		}
+		$id_transaksi_raw = $kode_tanggal . $kode_antrian;
+		$transaksi_id = $id_transaksi_raw;
+
+		$p_id = time();
+		$p_nama = $this->input->post('p_nama');
+		$p_nohp = $this->input->post('p_nohp');
+
+		// var_dump($p_id . $p_nama . $p_nohp);
+
+		$desain_id = $user['user_id'];
+		$total = 0;
+		$diskon = 0;
+		$diskon_status = 0;
+		$uang = 0;
+		$uang_status = 'cash';
+
+		// var_dump($id_transaksi);
+		// exit();
+
+		$this->M_Transaksi->insertPelanggan($p_id, $p_nama, $p_nohp);
+
+		$this->M_Transaksi->insertTransaksi(
+			$transaksi_id,
+			$desain_id,
+			$p_id,
+			$total,
+			$diskon,
+			$diskon_status,
+			$uang,
+			$uang_status
+		);
+
+		redirect('kasir/ubahDetailTransaksi/' . $transaksi_id);
+	}
+
+	function ubahDetailTransaksi($transaksi_id)
+	{
+		$data['user_nama'] = $this->session->userdata('user_nama');
+		$data['titel'] = "Form Input Transaksi";
+		$data['jajal'] = "Desain";
+		$data['namamenu'] = "Desain";
+		$data['martis'] = "";
+		$data['barang'] = $this->M_barang->getBarangAll();
+		$data['transaksi_id'] = $transaksi_id;
+		$data['transaksi'] = $this->M_Transaksi->getTransaksiByIdRow($transaksi_id);
+
+		$this->load->view('Admin/header', $data);
+		$this->load->view('Admin/Menu', $data);
+		$this->load->view('kasir/kasirDetailTransaksi', $data);
+		$this->load->view('Admin/footer');
+
+		$kode_tanggal = 'T' . date('ymd', time());
+		$count_nota_today = $this->M_Transaksi->getTransaksiLikeId($kode_tanggal);
+		$antrian = $count_nota_today + 1;
+		if ($antrian < 10) {
+			$kode_antrian = "00" . $antrian;
+		} else if ($antrian < 100) {
+			$kode_antrian = "0" . $antrian;
+		}
+		$id_transaksi_raw = $kode_tanggal . $kode_antrian;
+		$id_transaksi = $id_transaksi_raw;
+		// var_dump($count_nota_today);
+		// var_dump($id_transaksi);
+	}
+
+	function actionUbahDetailTransaksi($transaksi_id)
+	{
+		$data_dtr = $this->M_Transaksi->getDetailTransaksiById($transaksi_id);
+		$trs = $this->M_Transaksi->getTransaksiByIdRow($transaksi_id);
+		$tr_total = 0;
+		foreach ($data_dtr as $dtr) {
+			$tr_total = $tr_total + $dtr['dtr_total'];
+		}
+		$dtNow = date('Y-m-d H:i:s', time());
+		$data_tr = [
+			"tr_total" => $tr_total,
+			"tr_tgl_update" => $dtNow
+		];
+		$this->M_Transaksi->updateTransaksi($data_tr, $transaksi_id);
+
+		$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible fade show" role="alert">
+         Terima Kasir, Ubah Detail Transaksi atas nama <strong>' . $trs['p_nama'] . '</strong> telah berhasil              
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>');
+		redirect('kasir/ubahPembayaran/' . $transaksi_id);
+	}
+
+	function insertDetailTransaksi($transaksi_id)
+	{
+		// $transaksi_id = 'T210225001';
+		$barang_id = $this->input->post('barang_id');;
+		$barang = $this->M_barang->getBarangDetail($barang_id);
+
+		$panjang = 100;
+		$lebar = 100;
+		$jumlah = 1;
+		$harga = $barang['barang_harjul'];
+		$total = $barang['barang_harjul'];
+		$keterangan = 'skip';
+		$this->M_Transaksi->insertDetailTransaksi(
+			$transaksi_id,
+			$barang_id,
+			$panjang,
+			$lebar,
+			$jumlah,
+			$harga,
+			$total,
+			$keterangan
+		);
+
+		echo $this->isiKeranjang($transaksi_id);
+	}
+
+	function hapusDetailTransaksi()
+	{
+		$dtr_id = $this->input->post('det_id');
+		$this->M_Transaksi->deleteDetailTransaksi($dtr_id);
+	}
+
+	function tampilIsiKeranjang($id_transaksi)
+	{
+		echo $this->isiKeranjang($id_transaksi);
+	}
+
+	public function isiKeranjang($id_transaksi)
+	{
+		$cart_list = $this->M_Transaksi->getDetailTransaksiById($id_transaksi);
+
+		$output = '';
+		$output .= '<table class="table" id="cartTable">
+                        <thead>
+                            <tr>
+                                <th>Nama Barang</th>
+                                <th style="width:10%">Panjang (cm)</th>
+                                <th style="width:10%">Lebar (cm)</th>
+                                <th style="width:10%">Jumlah Cetak(pcs)</th>
+                                <th style="width:10%">Harga satuan</th>
+                                <th>Total Harga</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbKeranjang">';
+		$nmbr = 0;
+		if ($cart_list) {
+			foreach ($cart_list as $cl) {
+				$nmbr = $nmbr + 1;
+				if ($cl['barang_satuan'] == 1) {
+					$output .= '<tr class="records" id="row' . $nmbr . '">
+                                <td class="pt-3">' . $cl['barang_nama'] . ' <input class=" form-control form-control-sm" id="dtr_total" type="text" value="' . $cl['dtr_total'] . '" hidden> <input class=" form-control form-control-sm" name="" id="dtr_id" type="text" value="' . $cl['dtr_id'] . '" hidden></td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '"> </td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '"> </td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_jumlah" style="text-align: center;" type="text" value="' . $cl['dtr_jumlah'] . '"> </td>
+                                <td style="width:12%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_harga" style="text-align: right;" type="text" value="' . $cl['dtr_harga'] . '">  </td>
+                                <td class="pt-3" id="vdtr_total">' . $cl['dtr_total'] . ' </td>
+                                <td> <a href="#" onclick="hapusKeranjang(' . $nmbr . ')" class="badge badge-danger btn_del' . $nmbr . '" data-detid="' . $cl['dtr_id'] . '" data-detnama="' . $cl['barang_nama'] . '">Hapus</a> </td>
+                            </tr>';
+				} else if ($cl['barang_satuan'] == 2) {
+					$output .= '<tr class="records" id="row' . $nmbr . '">
+                                <td class="pt-3">' . $cl['barang_nama'] . ' <input class=" form-control form-control-sm" id="dtr_total" type="text" value="' . $cl['dtr_total'] . '" hidden> <input class=" form-control form-control-sm" name="" id="dtr_id" type="text" value="' . $cl['dtr_id'] . '" hidden></td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '" hidden> </td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '" hidden> </td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_jumlah" style="text-align: center;" type="text" value="' . $cl['dtr_jumlah'] . '"> </td>
+                                <td style="width:12%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_harga"  style="text-align: right; "type="text" value="' . $cl['dtr_harga'] . '" >  </td>
+                                <td class="pt-3" id="vdtr_total">' . $cl['dtr_total'] . ' </td>
+                                <td> <a href="#" onclick="hapusKeranjang(' . $nmbr . ')" class="badge badge-danger btn_del' . $nmbr . '" data-detid="' . $cl['dtr_id'] . '" data-detnama="' . $cl['barang_nama'] . '">Hapus</a> </td>
+                            </tr>';
+				} else {
+					$output .= '<tr class="records" id="row' . $nmbr . '">
+                                <td class="pt-3">' . $cl['barang_nama'] . ' <input class=" form-control form-control-sm" id="dtr_total" type="text" value="' . $cl['dtr_total'] . '" hidden> <input class=" form-control form-control-sm" name="" id="dtr_id" type="text" value="' . $cl['dtr_id'] . '" hidden></td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '" hidden> </td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '" hidden> </td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_jumlah" style="text-align: center;" type="text" value="' . $cl['dtr_jumlah'] . '" hidden> </td>
+                                <td style="width:12%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_harga" style="text-align: right; style="text-align: left;" type="text" value="' . $cl['dtr_harga'] . '">  </td>
+                                <td class="pt-3" id="vdtr_total" >' . $cl['dtr_total'] . ' </td>
+                                <td> <a href="#" onclick="hapusKeranjang(' . $nmbr . ')" class="badge badge-danger btn_del' . $nmbr . '" data-detid="' . $cl['dtr_id'] . '" data-detnama="' . $cl['barang_nama'] . '">Hapus</a> </td>
+                            </tr>';
+				}
+			};
+			$output .= '</tbody></table>';
+		} else {
+			$output .= '</tbody></table>';
+			$output .= '<div class="col-lg-12" id="info_cartKosong">
+                                                <div class="alert alert-default border border-warning" role="alert">
+                                                    <b>Informasi!</b> Belum ada pembelian ditambahkan
+                                                </div>
+                                            </div>';
+		}
+
+
+		return $output;
+	}
+
+	function updateDataKeranjang($detail_transaksi_id)
+	{
+		$data_dtr = $this->M_Transaksi->getDetailTransaksiByIdRow($detail_transaksi_id);
+
+		$dtr_panjang = $this->input->post('dtr_panjang');
+		$dtr_lebar = $this->input->post('dtr_lebar');
+		$dtr_jumlah = $this->input->post('dtr_jumlah');
+		$dtr_harga = $this->input->post('dtr_harga');
+
+		// if ($data_dtr['barang_satuan'] == 2) {
+		// 	if ($dtr_jumlah <= 50) {
+		// 		$harjul = $data_dtr['barang_harjul'];
+		// 	} elseif ($dtr_jumlah <= 100) {
+		// 		$harjul = $data_dtr['barang_harjul2'];
+		// 	} else {
+		// 		$harjul = $data_dtr['barang_harjul3'];
+		// 	}
+		// } elseif ($data_dtr['barang_satuan'] == 3) {
+		// 	$harjul = $dtr_harga;
+		// } else {
+		// 	$harjul = $data_dtr['barang_harjul'];
+		// }
+
+		$harjul = $dtr_harga;
+		$dtr_total = $dtr_panjang * $dtr_lebar / 10000 * $dtr_jumlah * $harjul;
+
+		$data_dtr = [
+			"dtr_panjang" => $dtr_panjang,
+			"dtr_lebar" =>  $dtr_lebar,
+			"dtr_jumlah" =>  $dtr_jumlah,
+			"dtr_harga" =>  $harjul,
+			"dtr_total" =>  $dtr_total,
+		];
+		// var_dump($data_dtr);
+		// exit();
+		$this->M_Transaksi->updateDetailTransaksi($data_dtr, $detail_transaksi_id);
+		echo $harjul;
 	}
 
 	function transaksiBelumDiambil()
@@ -41,6 +290,42 @@ class Kasir extends CI_Controller
 		$data['martis'] = "";
 		$data['satuan_barang'] = $this->M_barang->getSatuanBarangAll();
 		$data['transaksi'] = $this->M_Transaksi->getTransaksiBelumDiambil();
+		// var_dump($transaksi);
+		// exit();
+		$this->load->view('Admin/header', $data);
+		$this->load->view('Admin/Menu', $data);
+		$this->load->view('Kasir/kasirListTransaksi', $data);
+		$this->load->view('Admin/footer');
+	}
+
+	function transaksiSudahDiambil()
+	{
+		$data['user_nama'] = $this->session->userdata('user_nama');
+		$data['titel'] = "Daftar Transaksi Sudah Diambil";
+		$data['jajal'] = "Kasir";
+		$data['namamenu'] = "Kasir";
+		$data['barang'] = $this->M_barang->getBarangAll();
+		$data['martis'] = "";
+		$data['satuan_barang'] = $this->M_barang->getSatuanBarangAll();
+		$data['transaksi'] = $this->M_Transaksi->getTransaksiSudahDiambil();
+		// var_dump($transaksi);
+		// exit();
+		$this->load->view('Admin/header', $data);
+		$this->load->view('Admin/Menu', $data);
+		$this->load->view('Kasir/kasirListTransaksi', $data);
+		$this->load->view('Admin/footer');
+	}
+
+	function transaksiHutang()
+	{
+		$data['user_nama'] = $this->session->userdata('user_nama');
+		$data['titel'] = "Daftar Transaksi Sudah Diambil";
+		$data['jajal'] = "Kasir";
+		$data['namamenu'] = "Kasir";
+		$data['barang'] = $this->M_barang->getBarangAll();
+		$data['martis'] = "";
+		$data['satuan_barang'] = $this->M_barang->getSatuanBarangAll();
+		$data['transaksi'] = $this->M_Transaksi->getTransaksiHutang();
 		// var_dump($transaksi);
 		// exit();
 		$this->load->view('Admin/header', $data);
@@ -77,7 +362,9 @@ class Kasir extends CI_Controller
                                         </div>
                                     </div>';
 		$output .= '<div class="row">
-                                <div class="col=lg-12">
+                                <div class="col-lg-12">
+                                    <div class="overflow-auto" style="overflow-x:auto;">
+								
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
@@ -98,28 +385,28 @@ class Kasir extends CI_Controller
 				$panjang = $dtr['dtr_panjang'];
 				$lebar = $dtr['dtr_lebar'];
 			} else {
-				$panjang = '';
-				$lebar = '';
+				$panjang = '-';
+				$lebar = '-';
 			}
 
 			if ($dtr['barang_satuan'] == 3) {
-				$jumlah = '';
+				$jumlah = '-';
 			} else {
 				$jumlah = $dtr['dtr_jumlah'];
 			}
 			$output .= '                    <tr>
                                             <td> ' . $no . '</td>
                                             <td> ' . $dtr['barang_nama'] . '</td>
-                                            <td> ' . $panjang . '</td>
-                                            <td> ' . $lebar . '</td>
-                                            <td> ' . $jumlah . '</td>
-                                            <td> ' . $dtr['dtr_harga'] . '</td>
-                                            <td> ' . $dtr['dtr_total'] . '</td>
+                                            <td class="text-center"> ' . $panjang . '</td>
+                                            <td class="text-center"> ' . $lebar . '</td>
+                                            <td class="text-center"> ' . $jumlah . '</td>
+                                            <td class="text-right"> ' . $dtr['dtr_harga'] . '</td>
+                                            <td class="text-right"> ' . $dtr['dtr_total'] . '</td>
                                         </tr>';
 		}
-		$output .= '        </table>
+		$output .= '        </table></div>
                                 </div>';
-		if ($data_tr['tr_status_pengerjaan'] == 3) {
+		if ($data_tr['tr_status_pengerjaan'] == 2) {
 		} else {
 			$output .= ' <div class="col-lg-12">
 								<form action="' . base_url() . 'kasir/ubahPembayaran/' . $transaksi_id . '" method="POST">
@@ -136,6 +423,60 @@ class Kasir extends CI_Controller
 
 	function ubahPembayaran($transaksi_id)
 	{
+		$transaksi = $this->M_Transaksi->getTransaksiByIdRow($transaksi_id);
+		$data_dtr = $this->M_Transaksi->getDetailTransaksiById($transaksi_id);
+
+		// hitung total harga terbaru
+		$subtotal = 0;
+		foreach ($data_dtr as $dtr) {
+			$subtotal = $subtotal + $dtr['dtr_total'];
+		}
+
+		//hitung nominal diskon
+		$nom_diskon = 0;
+		if ($transaksi['tr_diskon_status'] == 1) {
+			$nom_diskon = $transaksi['tr_diskon'] * $subtotal / 100;
+		} else {
+			$nom_diskon = $transaksi['tr_diskon'];
+		}
+
+		// deteksi lunas atau belum 
+		$grand_total = $subtotal - $nom_diskon;
+		if ($transaksi['tr_uang'] >= $grand_total) {
+			// ini lunas
+			$s_pembayaran = 4;
+		} else {
+			if ($transaksi['tr_status_pembayaran'] == 3) {
+				//status tetep hutang
+				$s_pembayaran = 3;
+			} else {
+				//status belum lunas
+				$s_pembayaran = 1;
+			}
+		}
+
+		// perhitunga kembalian
+		$kembalian = 0;
+		$raw_kembalian = $transaksi['tr_uang'] - $grand_total;
+		if ($raw_kembalian < 1) {
+			$kembalian = 0;
+		} else {
+			$kembalian = $raw_kembalian;
+		}
+
+		// var_dump('Subtotal : ' . $subtotal);
+		// var_dump('Nominal diskon : ' . $nom_diskon);
+		// var_dump('Bayar : ' . $transaksi['tr_uang']);
+		// var_dump('Status : ' . $s_pembayaran);
+		// var_dump('Kembalian : ' . $kembalian);
+
+		// exit();
+		$data_tr = [
+			"tr_total" => $subtotal,
+			"tr_status_pembayaran" => $s_pembayaran,
+			"tr_kembalian" => $kembalian
+		];
+		$this->M_Transaksi->updateTransaksi($data_tr, $transaksi_id);
 
 		$data['user_nama'] = $this->session->userdata('user_nama');
 		$data['titel'] = "Form Ubah Pembayaran";
@@ -147,9 +488,56 @@ class Kasir extends CI_Controller
 		$data['transaksi'] = $this->M_Transaksi->getTransaksiByIdRow($transaksi_id);
 		$data['data_dtr'] = $this->M_Transaksi->getDetailTransaksiById($transaksi_id);
 
-		// var_dump($data['transaksi']);
-		// var_dump($data['dtr']);
-		// exit();
+		$data['bayar_hidden'] = '';
+		$data['hutang_hidden'] = '';
+		$data['ambil_hidden'] = '';
+
+		if ($data['transaksi']['tr_status_pembayaran'] < 3 || $data['transaksi']['tr_status_pengerjaan'] == 2) {
+			$data['ambil_hidden'] = ' hidden';
+		} else {
+			$data['ambil_hidden'] = ' ';
+		}
+
+		if ($data['transaksi']['tr_status_pembayaran'] < 3) {
+			$data['hutang_hidden'] = ' ';
+		} else {
+			$data['hutang_hidden'] = ' hidden';
+		}
+
+		if ($data['transaksi']['tr_status_pembayaran'] == 4) {
+			$data['bayar_hidden'] = ' hidden';
+		} else {
+			$data['bayar_hidden'] = ' ';
+		}
+
+
+		$data['r_belum'] = ' hidden';
+		$data['r_hutang'] = ' hidden';
+		$data['r_lunas'] = ' hidden';
+
+		if ($data['transaksi']['tr_status_pembayaran'] == 3) {
+			$data['r_belum']  = ' hidden';
+			$data['r_hutang'] = ' ';
+			$data['r_lunas']  = ' hidden';
+		} elseif ($data['transaksi']['tr_status_pembayaran'] == 4) {
+			$data['r_belum']  = ' hidden';
+			$data['r_hutang'] = ' hidden';
+			$data['r_lunas']  = ' ';
+		} else {
+			$data['r_belum']  = ' ';
+			$data['r_hutang'] = ' hidden';
+			$data['r_lunas']  = ' hidden';
+		}
+
+		$data['done_hidden'] = ' hidden';
+		if ($data['transaksi']['tr_status_pengerjaan'] == 2) {
+			$data['done_hidden'] = ' ';
+		}
+
+		$data['form_hidden'] = '';
+		if ($data['transaksi']['tr_status_pembayaran'] == 4) {
+			$data['form_hidden'] = ' hidden';
+		}
 
 		$this->load->view('Admin/header', $data);
 		$this->load->view('Admin/Menu', $data);
@@ -160,42 +548,81 @@ class Kasir extends CI_Controller
 
 	function actionUbahPembayaran($transaksi_id)
 	{
-		if ($this->input->post('submit') == 2 || $this->input->post('submit') == '2') {
-			// disini kasih redirect ke fucntion untuk cetak nota
-			redirect('kasir/cetakNota/' . $transaksi_id);
-		} else {
-			$transaksi = $this->M_Transaksi->getTransaksiByIdRow($transaksi_id);
-			$nom_bayar = $this->input->post('nom_bayar');
-			$diskon = $this->input->post('diskon');
-			$diskon_status = $this->input->post('diskon_status');
+		$transaksi = $this->M_Transaksi->getTransaksiByIdRow($transaksi_id);
+		$nom_bayar = $this->input->post('nom_bayar');
+		$diskon = $this->input->post('diskon');
+		$diskon_status = $this->input->post('diskon_status');
+		$uang_status = $this->input->post('jenis_bayar');
 
-			// if ($diskon_status == 1) {
-			// 	$diskon = $diskon * $transaksi['tr_total'] / 100;
-			// }
+		// if ($diskon_status == 1) {
+		// 	$diskon = $diskon * $transaksi['tr_total'] / 100;
+		// }
 
-			$uang = $transaksi['tr_uang'] + $nom_bayar;
-			$kembalian = $transaksi['tr_total'] - $uang;
-			if ($kembalian < 0) {
-				$kembalian = 0;
-			}
+		$uang = $transaksi['tr_uang'] + $nom_bayar;
+		$kembalian = $transaksi['tr_total'] - $uang;
+		if ($kembalian < 0) {
+			$kembalian = 0;
+		}
 
-			$data_tr = [
-				"tr_uang" => $uang,
-				"tr_diskon" => $diskon,
-				"tr_diskon_status" => $diskon_status,
-				"tr_kembalian" => $uang,
-			];
-			$this->M_Transaksi->updateTransaksi($data_tr, $transaksi_id);
+		$dtNow = date('Y-m-d H:i:s', time());
 
-			// var_dump($data_tr);
-			$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible fade show" role="alert">
+		$data_tr = [
+			"tr_uang" => $uang,
+			"tr_diskon" => $diskon,
+			"tr_diskon_status" => $diskon_status,
+			"tr_kembalian" => $uang,
+			"tr_uang_status" => $uang_status,
+			"tr_tgl_update" => $dtNow
+		];
+		$this->M_Transaksi->updateTransaksi($data_tr, $transaksi_id);
+
+		// var_dump($data_tr);
+		$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible fade show" role="alert">
                        Pembayaran Transaksi atas nama <strong>' . $transaksi['p_nama'] . '</strong> Berhasil
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>');
-			redirect('kasir/ubahPembayaran/' . $transaksi_id);
-		}
+		redirect('kasir/ubahPembayaran/' . $transaksi_id);
+	}
+
+	function actionAmbil($transaksi_id)
+	{
+		echo 'ini adalah action ambil';
+		$transaksi = $this->M_Transaksi->getTransaksiByIdRow($transaksi_id);
+		$dtNow = date('Y-m-d H:i:s', time());
+		$data_tr = [
+			"tr_status_pengerjaan" => 2,
+			"tr_tgl_selesai" => $dtNow,
+		];
+		$this->M_Transaksi->updateTransaksi($data_tr, $transaksi_id);
+		redirect('kasir/cetakNota/' . $transaksi_id);
+		// $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+		//                Terima Kasih, Pengambilan Transaksi atas nama <strong>' . $transaksi['p_nama'] . '</strong> Telah Berhasil Dikonfirmasi
+		//                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		//                     <span aria-hidden="true">&times;</span>
+		//                 </button>
+		//             </div>');
+		// redirect('kasir/ubahPembayaran/' . $transaksi_id);
+	}
+
+	function actionHutang($transaksi_id)
+	{
+		echo 'ini adalah action hutang';
+		$transaksi = $this->M_Transaksi->getTransaksiByIdRow($transaksi_id);
+		$dtNow = date('Y-m-d H:i:s', time());
+		$data_tr = [
+			"tr_status_pembayaran" => 3,
+			"tr_tgl_update" => $dtNow,
+		];
+		$this->M_Transaksi->updateTransaksi($data_tr, $transaksi_id);
+		$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible fade show" role="alert">
+                       Status Transaksi atas nama <strong>' . $transaksi['p_nama'] . '</strong> berhasil diubah menjadi <strong>Hutang</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>');
+		redirect('kasir/ubahPembayaran/' . $transaksi_id);
 	}
 
 	function cetakNota($transaksi_id)
@@ -314,23 +741,7 @@ class Kasir extends CI_Controller
 		$pdf->Output();
 	}
 
-	function transaksiSudahDiambil()
-	{
-		$data['user_nama'] = $this->session->userdata('user_nama');
-		$data['titel'] = "Daftar Transaksi Sudah Diambil";
-		$data['jajal'] = "Kasir";
-		$data['namamenu'] = "Kasir";
-		$data['barang'] = $this->M_barang->getBarangAll();
-		$data['martis'] = "";
-		$data['satuan_barang'] = $this->M_barang->getSatuanBarangAll();
-		$data['transaksi'] = $this->M_Transaksi->getTransaksiSudahDiambil();
-		// var_dump($transaksi);
-		// exit();
-		$this->load->view('Admin/header', $data);
-		$this->load->view('Admin/Menu', $data);
-		$this->load->view('Kasir/kasirListTransaksi', $data);
-		$this->load->view('Admin/footer');
-	}
+
 
 	function daftarHargaGudang()
 	{

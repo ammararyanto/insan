@@ -20,39 +20,68 @@
                 </div>
                 <div class="col-lg-3 col-6">
                     <!-- small box -->
+                    <a href="#" class="small-box bg-secondary py-2" onclick="inputPelanggan()">
+                        <div class="inner">
+                            <h4 class="mt-3">Input</h4>
+                            <h5>Transaksi Baru</h5>
+
+                            <p> </p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-file-medical"></i>
+                        </div>
+                    </a>
+                </div>
+
+
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
                     <a href="<?= base_url() ?>kasir/transaksiBelumDiambil" class="small-box bg-info">
                         <div class="inner">
                             <h3 class="mt-3"><?= $count_belum_diambil ?></h3>
-                            <h5>Belum Diambil</h5>
+                            <h5>Transaksi Belum Diambil</h5>
 
                             <p> </p>
                         </div>
                         <div class="icon">
-                            <i class="fas fa-file-invoice"></i>
+                            <i class="fas fa-file-invoice-dollar"></i>
                         </div>
                     </a>
                 </div>
 
                 <div class="col-lg-3 col-6">
                     <!-- small box -->
-                    <a href="<?= base_url() ?>kasir/transaksiSudahDiambil" class="small-box bg-info">
+                    <a href="<?= base_url() ?>kasir/transaksiSudahDiambil" class="small-box bg-success">
                         <div class="inner">
                             <h3 class="mt-3"><?= $count_sudah_diambil ?></h3>
-                            <h5>Sudah Diambil</h5>
+                            <h5>Transaksi Sudah Diambil</h5>
 
                             <p> </p>
                         </div>
                         <div class="icon">
-                            <i class="fas fa-file-invoice"></i>
+                            <i class="fas fa-file-invoice-dollar"></i>
                         </div>
                     </a>
                 </div>
-
                 <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <a href="<?= base_url() ?>kasir/transaksiHutang" class="small-box bg-danger">
+                        <div class="inner">
+                            <h3 class="mt-3"><?= $count_sudah_diambil ?></h3>
+                            <h5>Transaksi Hutang</h5>
+
+                            <p> </p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-6" hidden>
                     <!-- small box -->
                     <a href="<?= base_url() ?>kasir/daftarHargaGudang" class="small-box bg-success py-2">
                         <div class="inner">
-                            <h4 class="mt-3">Daftar</h4>
+                            <h4 class="mt-3">Input </h4>
                             <h5>Harga Gudang</h5>
 
                             <p> </p>
@@ -62,9 +91,10 @@
                         </div>
                     </a>
                 </div>
+
             </div>
             <div class="modal fade" id="modal-pelanggan">
-                <form action=<?= base_url('desain/inputTransaksi') ?> method="POST">
+                <form action=<?= base_url('kasir/inputTransaksi') ?> method="POST">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -78,7 +108,11 @@
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="nabar">Nama Pelanggan</label>
-                                            <input class="form-control form-control" type="text" placeholder="- masukan nama pelanggan -" id="b_nama" name="b_nama" autocomplete="off">
+                                            <input class="form-control form-control" type="text" placeholder="- masukan nama pelanggan -" id="p_nama" name="p_nama" autocomplete="off">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="nabar">No HP</label>
+                                            <input class="form-control form-control" type="text" placeholder="- masukan no hp pelanggan -" id="p_nohp" name="p_nohp" autocomplete="off" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength); " maxlength="13">
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
