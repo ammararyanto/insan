@@ -201,7 +201,7 @@ class Kasir extends CI_Controller
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '"> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '"> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_jumlah" style="text-align: center;" type="text" value="' . $cl['dtr_jumlah'] . '"> </td>
-                                <td style="width:12%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_harga" style="text-align: right;" type="text" value="' . $cl['dtr_harga'] . '">  </td>
+                                <td style="width:12%"> <input class=" form-control form-control-sm xoxo" onchange="sum(' . $nmbr . ')" name="" id="dtr_harga" style="text-align: right;" type="text" value="' . $cl['dtr_harga'] . '">  </td>
                                 <td class="pt-3" id="vdtr_total">' . $cl['dtr_total'] . ' </td>
                                 <td> <a href="#" onclick="hapusKeranjang(' . $nmbr . ')" class="badge badge-danger btn_del' . $nmbr . '" data-detid="' . $cl['dtr_id'] . '" data-detnama="' . $cl['barang_nama'] . '">Hapus</a> </td>
                             </tr>';
@@ -407,6 +407,12 @@ class Kasir extends CI_Controller
 		$output .= '        </table></div>
                                 </div>';
 		if ($data_tr['tr_status_pengerjaan'] == 2) {
+			$output .= ' <div class="col-lg-12">
+								<form action="' . base_url() . 'Kasir/ubahPembayaran/' . $transaksi_id . '" method="POST">
+                                    <input type="submit" value="Detail Transaksi" class="ml-3 btn btn-success float-right">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+								</form>
+                            </div>';
 		} else {
 			$output .= ' <div class="col-lg-12">
 								<form action="' . base_url() . 'Kasir/ubahPembayaran/' . $transaksi_id . '" method="POST">
@@ -549,11 +555,12 @@ class Kasir extends CI_Controller
 	function actionUbahPembayaran($transaksi_id)
 	{
 		$transaksi = $this->M_Transaksi->getTransaksiByIdRow($transaksi_id);
-		$nom_bayar = $this->input->post('nom_bayar');
-		$diskon = $this->input->post('diskon');
+		// $nom_bayar = $this->input->post('nom_bayar');
+		// $diskon = $this->input->post('diskon');
 		$diskon_status = $this->input->post('diskon_status');
 		$uang_status = $this->input->post('jenis_bayar');
-
+		$nom_bayar = str_replace('.', '', $this->input->post('nom_bayar'));
+		$diskon = str_replace('.', '', $this->input->post('diskon'));
 		// if ($diskon_status == 1) {
 		// 	$diskon = $diskon * $transaksi['tr_total'] / 100;
 		// }

@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Menu Isi Sedang Dalam Masa Pengembangan :)</h1>
+                    <h1 class="m-0 text-dark">Laporan</h1>
                 </div><!-- /.col -->
 
             </div>
@@ -16,11 +16,86 @@
             <div class="row">
                 <div class="col-lg-12">
                     <?= $this->session->flashdata('message'); ?>
+
+                </div>
+
+
+
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <a href="<?= base_url() ?>Laporan/laporanTransaksi" class="small-box bg-info">
+                        <div class="inner">
+                            <h4 class="mt-3">Laporan</h4>
+                            <h5>Transaksi Percetakan</h5>
+
+                            <p> </p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <a href="<?= base_url() ?>Laporan/laporanPembelianBarang" class="small-box bg-success">
+                        <div class="inner">
+                            <h4 class="mt-3">Laporan</h4>
+                            <h5>Pembelian Barang</h5>
+
+                            <p> </p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <a href="<?= base_url() ?>Laporan/laporanPengeluaran" class="small-box bg-danger">
+                        <div class="inner">
+                            <h4 class="mt-3">Laporan</h4>
+                            <h5>Pengeluaran Operasional</h5>
+
+                            <p> </p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-comment-dollar"></i>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <a href="<?= base_url() ?>Laporan/laporanRekap" class="small-box bg-primary">
+                        <div class="inner">
+                            <h4 class="mt-3">Laporan</h4>
+                            <h5>Rekapitulasi</h5>
+
+                            <p> </p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-6" hidden>
+                    <!-- small box -->
+                    <a href="<?= base_url() ?>kasir/daftarHargaGudang" class="small-box bg-success py-2">
+                        <div class="inner">
+                            <h4 class="mt-3"></h4>
+                            <h5>Harga Gudang</h5>
+
+                            <p> </p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                    </a>
                 </div>
 
             </div>
             <div class="modal fade" id="modal-pelanggan">
-                <form action=<?= base_url('desain/inputTransaksi') ?> method="POST">
+                <form action=<?= base_url('kasir/inputTransaksi') ?> method="POST">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -38,7 +113,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="nabar">No HP</label>
-                                            <input class="form-control form-control" type="text" placeholder="- masukan nama pelanggan -" id="p_nohp" name="p_nohp" autocomplete="off">
+                                            <input class="form-control form-control" type="text" placeholder="- masukan no hp pelanggan -" id="p_nohp" name="p_nohp" autocomplete="off" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength); " maxlength="13">
                                         </div>
                                     </div>
                                     <div class="col-lg-12">

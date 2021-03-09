@@ -162,7 +162,7 @@ class Gudang extends CI_Controller
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>');
-        redirect('gudang/dataBarang');
+        redirect('Gudang/dataBarang');
     }
 
     function editBarang()
@@ -206,26 +206,285 @@ class Gudang extends CI_Controller
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>');
-        redirect('gudang/dataBarang');
+        redirect('Gudang/dataBarang');
     }
 
     function barangMasuk()
     {
         $data['user_nama'] = $this->session->userdata('user_nama');
-        $data['titel'] = "Persediaan";
+        $data['titel'] = "Daftar Pembelian Barang";
         $data['jajal'] = "Persediaan";
         $data['namamenu'] = "Persediaan";
-        $data['martis'] = "data_gudang";
-        $data['barang'] = $this->M_barang->getBarangAll();
+        $data['martis'] = "pembelian_barang";
+        $data['barang'] = $this->M_barang->getBarangMasukAll();
         $data['satuan_barang'] = $this->M_barang->getSatuanBarangAll();
+        $data['jenis_satuan'] = $this->M_barang->getJenisSatuanAll();
+        // var_dump($data['jenis_satuan']);
+        // exit();
         // var_dump($data['satuan_barang']);
         // exit();
         $this->load->view('Admin/header', $data);
         $this->load->view('Admin/Menu', $data);
-        $this->load->view('Gudang/gudangBarangMasuk', $data);
+        $this->load->view('Gudang/gudangPembelianBarang', $data);
         $this->load->view('Admin/footer');
     }
 
+    function inputbarangMasuk()
+    {
+        $bm_nama = $this->input->post('ms_nama');
+        $bm_jumlah = $this->input->post('ms_jumlah');
+        $bm_satuan = $this->input->post('ms_satuan');
+        $bm_biaya = str_replace('.', '', $this->input->post('ms_biaya'));
+
+        $this->M_barang->createBarangMasuk(
+            $bm_nama,
+            $bm_jumlah,
+            $bm_satuan,
+            $bm_biaya
+        );
+        $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible fade show" role="alert">
+                        ' . $bm_nama . ' berhasil diinputkan ke daftar pembelian barang
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>');
+        redirect('Gudang/barangMasuk');
+    }
+
+
+    function ubahBarangMasuk()
+    {
+        echo 'Ini adalah fungsi editbarang masuk';
+        $bm_id = $this->input->post('ms_id_e');
+        $bm_nama = $this->input->post('ms_nama_e');
+        $bm_jumlah = $this->input->post('ms_jumlah_e');
+        $bm_satuan = $this->input->post('ms_satuan_e');
+        $bm_biaya = str_replace('.', '', $this->input->post('ms_biaya_e'));
+
+        $data_barang = [
+            "bm_nama" => $bm_nama,
+            "bm_jumlah" => $bm_jumlah,
+            "bm_satuan" => $bm_satuan,
+            "bm_biaya" => $bm_biaya,
+        ];
+        // var_dump($data_barang);
+        $this->M_barang->updateBarangMasuk($data_barang, $bm_id);
+
+        $this->session->set_flashdata('message', '<div class="alert alert-primary alert-dismissible fade show" role="alert">
+                        Data pembelian barang berhasil diubah
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>');
+        redirect('Gudang/barangMasuk');
+    }
+
+    function hapusBarangMasuk($bm_id)
+    {
+        $bm = $this->M_barang->getBarangMasukByIdRow($bm_id);
+        // $this->M_barang->deleteBarangMasuk($bm_id);
+        $this->session->set_flashdata('message', '<div class="alert alert-primary alert-dismissible fade show" role="alert">
+                        ' . $bm['bm_nama'] . 'berhasil dihapus dari data pembelian barang
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>');
+        redirect('Gudang/barangMasuk');
+    }
+
+    function tampilDetailBarangMasuk($bm_id)
+    {
+        echo $this->detailBarangMasuk($bm_id);
+    }
+
+    function detailBarangMasuk($bm_id)
+    {
+        $bm = $this->M_barang->getBarangMasukByIdRow($bm_id);
+        $jenis_satuan = $this->M_barang->getJenisSatuanAll();
+        // var_dump($bm);
+
+        $output = '';
+        $output .= '<div class="row">
+                                <div class="col-lg-12 col-12">
+                                    <div class="form-group">
+                                        <label for="nabar">Nama Barang</label>
+                                        <input value="' . $bm['bm_id'] . '" class="form-control form-control-sm" type="text" placeholder="" id="ms_id_e" name="ms_id_e" autocomplete="off" hidden>
+                                        <input value="' . $bm['bm_nama'] . '" class="form-control form-control-sm" type="text" placeholder="- masukan nama barang / layanan -" id="ms_nama_e" name="ms_nama_e" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-6">
+                                    <div class="form-group">
+                                        <label for="satuan">Jumlah / Quantity xx </label>
+                                        <input  value="' . $bm['bm_jumlah'] . '" class="form-control form-control-sm" type="text" placeholder="- masukan Quantity -" id="ms_jumlah_e" name="ms_jumlah_e" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-6">
+                                    <div class="form-group">
+                                        <label>Jenis Satuan</label>
+                                        <select class="form-control form-control-sm" id="ms_satuan_e" name="ms_satuan_e" onchange="hide_harjul_input()">
+                                        <option value="' . $bm['bm_satuan'] . '">' . $bm['bm_satuan'] . '</option>';
+
+        foreach ($jenis_satuan as $js) {
+            if ($js['js_nama'] == $bm['bm_satuan']) {
+            } else {
+                $output .= '<option value="' . $js['js_nama'] . '">' . $js['js_nama'] . '</option>';
+            }
+        }
+
+        $output .= '</select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-12">
+                                    <div class="form-group" id="vharjul2">
+                                        <label for="satuan">Biaya</label>
+                                        <input value="' . $bm['bm_biaya'] . '" class="form-control form-control-sm" type="text" placeholder="- masukan biaya pembelian barang - " id="ms_biaya_e" name="ms_biaya_e" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>';
+        $output .= "<script>
+    $(function() {
+        $('#ms_biaya_e').priceFormat({
+            prefix: '',
+            centsLimit: 0,
+            thousandsSeparator: '.',
+        });
+    });
+</script>";
+
+        return $output;
+    }
+
+
+    function pengeluaran()
+    {
+        $data['user_nama'] = $this->session->userdata('user_nama');
+        $data['titel'] = "Persediaan";
+        $data['jajal'] = "Persediaan";
+        $data['namamenu'] = "Persediaan";
+        $data['martis'] = "pengeluaran";
+        $data['pengeluaran'] = $this->M_barang->getPengeluaranAll();
+        $data['satuan_barang'] = $this->M_barang->getSatuanBarangAll();
+        // var_dump($data['pengeluaran']);
+        // exit();
+        $this->load->view('Admin/header', $data);
+        $this->load->view('Admin/Menu', $data);
+        $this->load->view('Gudang/gudangPengeluaran', $data);
+        $this->load->view('Admin/footer');
+    }
+
+    function tampilDetailPengeluaran($pl_id)
+    {
+        echo $this->detailPengeluaran($pl_id);
+    }
+
+    function detailPengeluaran($pl_id)
+    {
+        $pl = $this->M_barang->getPengeluaranByIdRow($pl_id);
+
+        $output = '';
+        $output .= '<div class="row">
+                                <div class="col-lg-12 col-12">
+                                    <div class="form-group">
+                                        <label for="nabar">Nama / Jenis Pengeluaran</label>
+                                        <input value="' . $pl['peng_id'] . '" class="form-control form-control-sm" type="text" placeholder="- misal bayar listrik bulanan -" id="pl_id_e" name="pl_id_e" autocomplete="off" hidden>
+                                        <input value="' . $pl['peng_nama'] . '" class="form-control form-control-sm" type="text" placeholder="- misal bayar listrik bulanan -" id="pl_nama_e" name="pl_nama_e" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 col-12">
+                                    <div class="form-group" id="vharjul2">
+                                        <label for="satuan">Biaya</label>
+                                        <input value="' . $pl['peng_biaya'] . '" class="form-control form-control-sm" type="text" placeholder="- misal 300.000 - " id="pl_biaya_e" name="pl_biaya_e" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 col-12">
+                                    <div class="form-group">
+                                        <label for="nabar">Keterangan (Boleh Kosong)</label>
+                                        <input value="' . $pl['peng_keterangan'] . '" class="form-control form-control-sm" type="text" placeholder="" id="pl_keterangan_e" name="pl_keterangan_e" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>';
+
+        $output .= "<script>
+    $(function() {
+        $('#pl_biaya_e').priceFormat({
+            prefix: '',
+            centsLimit: 0,
+            thousandsSeparator: '.',
+        });
+    });
+</script>";
+        return $output;
+    }
+
+    function inputPengeluaran()
+    {
+        $pl_nama = $this->input->post('pl_nama');
+        $pl_biaya = str_replace('.', '', $this->input->post('pl_biaya'));
+        $pl_keterangan = $this->input->post('pl_keterangan');
+
+        var_dump($pl_nama . $pl_biaya);
+
+        $this->M_barang->createPengeluaran(
+            $pl_nama,
+            $pl_biaya,
+            $pl_keterangan
+        );
+
+        $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>' . $pl_nama . ' </strong> berhasil diinputkan ke data pengeluaran
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>');
+        redirect('Gudang/pengeluaran');
+    }
+
+    function ubahPengeluaran()
+    {
+        $pl_id = $this->input->post('pl_id_e');
+        $pl_nama = $this->input->post('pl_nama_e');
+        $pl_biaya = str_replace('.', '', $this->input->post('pl_biaya_e'));
+        $pl_keterangan = $this->input->post('pl_keterangan_e');
+        $data_barang = [
+            "peng_nama" => $pl_nama,
+            "peng_biaya" => $pl_biaya,
+            "peng_keterangan" => $pl_keterangan,
+        ];
+        // var_dump($data_barang);
+        $this->M_barang->updatePengeluaran($data_barang, $pl_id);
+
+        $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                        Data Pengeluaran berhasil diubah
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>');
+        redirect('Gudang/pengeluaran');
+    }
+
+    function hapusPengeluaran($peng_id)
+    {
+        $pl =  $this->M_barang->getPengeluaranByIdRow($peng_id);
+
+        // var_dump($pl);
+        // exit();
+
+        $this->M_barang->deletePengeluaran($peng_id);
+        $this->session->set_flashdata('message', '<div class="alert alert-primary alert-dismissible fade show" role="alert">
+                        <strong>' . $pl['peng_nama'] . '</strong> berhasil dihapus dari data pengeluaran
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>');
+        redirect('Gudang/pengeluaran');
+    }
+
+
+    // =======================================================================================================================================================================
     function tampilDetailStok($barang_id)
     {
         echo $this->detailStokBarang($barang_id);
@@ -281,24 +540,7 @@ class Gudang extends CI_Controller
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>');
-        redirect('gudang/barangMasuk');
-    }
-
-    function pengeluaran()
-    {
-        $data['user_nama'] = $this->session->userdata('user_nama');
-        $data['titel'] = "Persediaan";
-        $data['jajal'] = "Persediaan";
-        $data['namamenu'] = "Persediaan";
-        $data['martis'] = "pengeluaran";
-        $data['barang'] = $this->M_barang->getBarangAll();
-        $data['satuan_barang'] = $this->M_barang->getSatuanBarangAll();
-        // var_dump($data['satuan_barang']);
-        // exit();
-        $this->load->view('Admin/header', $data);
-        $this->load->view('Admin/Menu', $data);
-        $this->load->view('Gudang/gudangPengeluaran', $data);
-        $this->load->view('Admin/footer');
+        redirect('Gudang/barangMasuk');
     }
 
 

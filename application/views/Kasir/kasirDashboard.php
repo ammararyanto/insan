@@ -67,7 +67,7 @@
                     <!-- small box -->
                     <a href="<?= base_url() ?>kasir/transaksiHutang" class="small-box bg-danger">
                         <div class="inner">
-                            <h3 class="mt-3"><?= $count_sudah_diambil ?></h3>
+                            <h3 class="mt-3"><?= $count_hutang ?></h3>
                             <h5>Transaksi Hutang</h5>
 
                             <p> </p>

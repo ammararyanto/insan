@@ -38,8 +38,7 @@
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
-                                    <div class="overflow-auto" style="overflow-x:auto;" m>
-
+                                    <div class="overflow-auto" style="overflow-x:auto;">
                                         <table id="example1" class="table table-bordered table-striped">
                                             <thead>
                                                 <tr>

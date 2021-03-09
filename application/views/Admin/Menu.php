@@ -72,11 +72,11 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo base_url(); ?>gudang/barangMasuk" class="nav-link <?php if ($martis == "barang_masuk") {
+                                    <a href="<?php echo base_url(); ?>gudang/barangMasuk" class="nav-link <?php if ($martis == "pembelian_barang") {
                                                                                                                 echo "active";
                                                                                                             } ?>">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Barang Masuk</p>
+                                        <p>Pembelian Barang</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -89,7 +89,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item has-treeview">
+                        <li class="nav-item has-treeview" hidden>
                             <a href="<?php echo base_url(); ?>desain" class="nav-link <?php if ($namamenu == "Desain") {
                                                                                             echo "active";
                                                                                         } ?>">

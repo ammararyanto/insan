@@ -62,7 +62,7 @@
                                 <!-- /.card-header -->
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-12 mb-3">
+                                        <div class="col-12 mb-3" <?= $form_hidden ?>>
                                             <a href="<?= base_url() ?>kasir/ubahDetailTransaksi/<?= $transaksi_id ?>" class="btn btn-primary mr-2 float-left"><i class="fas fa-shopping-cart"></i> Ubah Detail Transaksi</a>
                                         </div>
                                         <div class="col-12">
@@ -104,8 +104,8 @@
                                                             <td class="text-center"> <?= $panjang ?></td>
                                                             <td class="text-center"> <?= $lebar ?></td>
                                                             <td class="text-center"> <?= $jumlah ?></td>
-                                                            <td class="text-right"> <?= $dtr['dtr_harga'] ?></td>
-                                                            <td class="text-right"> <?= $dtr['dtr_total'] ?></td>
+                                                            <td class="text-right"> <?= money($dtr['dtr_harga'])  ?></td>
+                                                            <td class="text-right"> <?= money($dtr['dtr_total'])  ?></td>
                                                         </tr>
                                                     <?php } ?>
 
@@ -176,7 +176,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row align-items-end">
+                                <div class="row align-items-end" <?= $form_hidden ?>>
 
                                     <div class="col-md-6 col-6">
                                         <div class="form-group">
@@ -208,7 +208,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div class="row" <?= $form_hidden ?>>
                                     <div class="col-md-6 col-6">
                                         <div class="form-group">
                                             <label class="col-form-label-sm" for="nama">Nominal Bayar</label>
@@ -247,11 +247,19 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-12" <?= $done_hidden ?>>
-                                        <div class="alert alert-success" role="alert" <?= $done_hidden ?>>
-                                            <p class="text-justify"> <strong>Informasi,</strong> Transaksi sudah diambil oleh pelanggan pada tanggal xxx dan pukul xxx</p>
+
+                                        <?php
+                                        $ts_ambil = strtotime($transaksi['tr_tgl_selesai']);
+                                        $dt_ambil = date('Y-m-d', $ts_ambil);
+                                        $tgl_ambil = date_indo($dt_ambil);
+                                        $jam_ambil = date('H:i', $ts_ambil);
+                                        ?>
+
+                                        <div class="alert alert-success" role="alert">
+                                            <p class="text-justify"> <strong>Informasi,</strong> Transaksi ini sudah diambil oleh pelanggan pada tanggal <strong> <?= $tgl_ambil ?></strong> dan pukul <strong><?= $jam_ambil ?></strong></p>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12 mt-3">
+                                    <div class="col-lg-12">
                                         <!-- <input type="submit" value="Bayar" class="ml-3 btn btn-success float-right">
                                     <input type="submit" value="Bayar" class="ml-3 btn btn-success float-right"> -->
 
@@ -297,3 +305,22 @@
 <script type="text/javascript" src="<?php echo base_url() . 'assets/js/jquery.min.js'; ?>"></script>
 <script type="text/javascript" src="<?php echo base_url() . 'assets/js/moment.min.js'; ?>"></script>
 <script type="text/javascript" src="<?php echo base_url() . 'assets/js/bootstrap.min.js'; ?>"></script>
+<script type="text/javascript" src="<?php echo base_url() . 'assets/jquery.price_format.min.js' ?>"></script>
+
+<script>
+    $(function() {
+        $('#nom_bayar').priceFormat({
+            prefix: '',
+            centsLimit: 0,
+            thousandsSeparator: '.',
+        });
+    });
+
+    $(function() {
+        $('#diskon').priceFormat({
+            prefix: '',
+            centsLimit: 0,
+            thousandsSeparator: '.',
+        });
+    });
+</script>

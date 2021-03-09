@@ -46,17 +46,20 @@
                                                 <tr>
                                                     <th>No</th>
                                                     <th>Tanggal</th>
-                                                    <th>Jenis Pengeluaran</th>
-                                                    <th>Biaya </th>
-                                                    <th>Keterangan </th>
+                                                    <th>Nama Barang</th>
+                                                    <th>Jumlah </th>
+                                                    <th>Satuan</th>
+                                                    <th class="text-right">Biaya</th>
                                                     <th class="text-center">Action</th>
+
+
                                                 </tr>
                                             </thead>
                                             <?php
                                             $no = 0;
-                                            foreach ($pengeluaran as $pl) {
+                                            foreach ($barang as $b) {
                                                 $no = $no + 1;
-                                                $ts_create = strtotime($pl['peng_tanggal']);
+                                                $ts_create = strtotime($b['bm_tanggal_masuk']);
                                                 $dt_create = date('Y-m-d', $ts_create);
                                                 $tgl_create = date_indo($dt_create);
                                                 $jam_create = date('H:i', $ts_create);
@@ -71,13 +74,14 @@
                                                 <tr>
                                                     <td> <?= $no ?></td>
                                                     <td> <?= $tgl_create ?></td>
-                                                    <td> <?= $pl['peng_nama'] ?> </td>
-                                                    <td class="text-right"> <?= money($pl['peng_biaya']) ?> </td>
-                                                    <td> <?= $pl['peng_keterangan'] ?> </td>
+                                                    <td> <?= $b['bm_nama'] ?></td>
+                                                    <td> <?= $b['bm_jumlah'] ?></td>
+                                                    <td> <?= $b['bm_satuan'] ?></td>
+                                                    <td class="text-right"> <?= money($b['bm_biaya'])  ?></td>
                                                     <td class="text-center">
                                                         <div class="btn-group" role="group" aria-label="Basic example" <?= $action_hidden ?>>
-                                                            <a onclick="tampilFormEdit('<?= $pl['peng_id'] ?>')" class="btn btn-secondary btn-sm" href="#" data-toggle="tooltip" title="Bayar"><i class="fas fa-edit"></i></i></a>
-                                                            <a class="btn btn-secondary btn-sm konfirmasi-hapus" href="<?= base_url() ?>/Gudang/hapusPengeluaran/<?= $pl['peng_id'] ?>" data-toggle="tooltip" id="" title="Bayar"><i class="fas fa-trash"></i></i></a>
+                                                            <a onclick="tampilFormEdit('<?= $b['bm_id'] ?>')" class="btn btn-secondary btn-sm" href="#" data-toggle="tooltip" title="Bayar"><i class="fas fa-edit"></i></i></a>
+                                                            <a class="btn btn-secondary btn-sm konfirmasi-hapus" href="<?= base_url() ?>/Gudang/hapusBarangMasuk/<?= $b['bm_id'] ?>" data-toggle="tooltip" id="" title="Bayar"><i class="fas fa-trash"></i></i></a>
                                                         </div>
                                                     </td>
 
@@ -90,11 +94,11 @@
 
                                     <div class="modal fade" id="modal-tambah">
 
-                                        <form action=<?= base_url('gudang/inputPengeluaran') ?> method="POST">
+                                        <form action=<?= base_url('gudang/inputBarangMasuk') ?> method="POST">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title">Tambah Data Pengeluaran</h4>
+                                                        <h4 class="modal-title">Tambah Data Barang Baru</h4>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
@@ -103,22 +107,34 @@
                                                         <div class="row">
                                                             <div class="col-lg-12 col-12">
                                                                 <div class="form-group">
-                                                                    <label for="nabar">Nama / Jenis Pengeluaran</label>
-                                                                    <input class="form-control form-control-sm" type="text" placeholder="- misal bayar listrik bulanan -" id="pl_nama" name="pl_nama" autocomplete="off">
+                                                                    <label for="nabar">Nama Barang</label>
+                                                                    <input class="form-control form-control-sm" type="text" placeholder="- masukan nama barang / layanan -" id="ms_nama" name="ms_nama" autocomplete="off">
                                                                 </div>
                                                             </div>
 
+                                                            <div class="col-lg-6 col-6">
+                                                                <div class="form-group">
+                                                                    <label for="satuan">Jumlah / Quantity </label>
+                                                                    <input class="form-control form-control-sm" type="text" placeholder="- masukan Quantity -" id="ms_jumlah" name="ms_jumlah" autocomplete="off">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-6">
+                                                                <div class="form-group">
+                                                                    <label>Jenis Satuan Pembelian</label>
+                                                                    <select class='form-control form-control-sm' id='ms_satuan' name='ms_satuan' onchange="hide_harjul_input()">
+                                                                        <option>Pilih Satuan Barang</option>
+                                                                        <?php foreach ($jenis_satuan as $js) { ?>
+                                                                            <option value="<?= $js['js_nama'] ?>"><?= $js['js_nama'] ?></option>
+                                                                        <?php } ?>
+
+                                                                    </select>
+                                                                </div>
+                                                            </div>
                                                             <div class="col-lg-12 col-12">
                                                                 <div class="form-group" id="vharjul2">
                                                                     <label for="satuan">Biaya</label>
-                                                                    <input class="form-control form-control-sm" type="text" placeholder="- misal 300.000 - " id="pl_biaya" name="pl_biaya" autocomplete="off">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-lg-12 col-12">
-                                                                <div class="form-group">
-                                                                    <label for="nabar">Keterangan (Boleh Kosong)</label>
-                                                                    <input class="form-control form-control-sm" type="text" placeholder="" id="pl_keterangan" name="pl_keterangan" autocomplete="off">
+                                                                    <input class="form-control form-control-sm" type="text" placeholder="- masukan biaya pembelian barang - " id="ms_biaya" name="ms_biaya" autocomplete="off">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -151,7 +167,7 @@
 
         <div class="modal fade" id="modal-ubah">
 
-            <form action=<?= base_url('gudang/ubahPengeluaran') ?> method="POST">
+            <form action=<?= base_url('gudang/ubahBarangMasuk') ?> method="POST">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -161,28 +177,7 @@
                             </button>
                         </div>
                         <div class="modal-body" id="form-ubah">
-                            <div class="row">
-                                <div class="col-lg-12 col-12">
-                                    <div class="form-group">
-                                        <label for="nabar">Nama / Jenis Pengeluaran</label>
-                                        <input class="form-control form-control-sm" type="text" placeholder="- misal bayar listrik bulanan -" id="pl_nama_e" name="pl_nama_e" autocomplete="off">
-                                    </div>
-                                </div>
 
-                                <div class="col-lg-12 col-12">
-                                    <div class="form-group" id="vharjul2">
-                                        <label for="satuan">Biaya</label>
-                                        <input class="form-control form-control-sm" type="text" placeholder="- misal 300.000 - " id="pl_biaya_e" name="pl_biaya_e" autocomplete="off">
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-12 col-12">
-                                    <div class="form-group">
-                                        <label for="nabar">Keterangan (Boleh Kosong)</label>
-                                        <input class="form-control form-control-sm" type="text" placeholder="" id="pl_keterangan_e" name="pl_keterangan_e" autocomplete="off">
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div class="modal-footer justify-content-between">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
@@ -197,7 +192,7 @@
 
         <div class="modal fade" id="modal-edit">
 
-            <form action=<?= base_url('Gudang/editPengeluaran') ?> method="POST">
+            <form action=<?= base_url('gudang/editBarang') ?> method="POST">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -266,7 +261,7 @@
     });
 
     $(function() {
-        $('#pl_biaya').priceFormat({
+        $('#ms_biaya').priceFormat({
             prefix: '',
             centsLimit: 0,
             thousandsSeparator: '.',
@@ -277,7 +272,7 @@
     function tampilFormEdit(id) {
         $('#modal-ubah').modal('show');
 
-        $('#form-ubah').load("<?= base_url() ?>Gudang/tampilDetailPengeluaran/" + id);
+        $('#form-ubah').load("<?= base_url() ?>gudang/tampilDetailBarangMasuk/" + id);
         $("#vnama-fitur").html('Awewe');
         $("#vnama-stok").html('Olala');
     }
@@ -307,5 +302,15 @@
                 document.location.href = href;
             }
         })
+    });
+</script>
+
+<script>
+    $(function() {
+        $('#ms_biaya_e').priceFormat({
+            prefix: '',
+            centsLimit: 0,
+            thousandsSeparator: '.',
+        });
     });
 </script>

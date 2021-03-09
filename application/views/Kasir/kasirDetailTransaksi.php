@@ -101,13 +101,6 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-lg-12">
-                                            <div class="form-group">
-                                                <label class="col-form-label-sm" for="nama">Nomor HP</label>
-                                                <input type="text font-weight-bold" class="form-control uang_cash" id="uang_cash" name="uang_cash" value="<?= $transaksi['p_nohp'] ?>" placeholder="0" disabled>
-                                            </div>
-                                        </div>
-
                                     </div>
                                 </div>
                                 <!-- /.card-body -->
@@ -219,8 +212,21 @@
 <script src="<?php echo base_url(); ?>assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/plugins/toastr/toastr.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url() . 'assets/jquery.price_format.min.js'; ?>"></script>
+
 <script>
     $('#cart_col').load("<?php echo base_url() ?>kasir/tampilIsiKeranjang/<?= $transaksi_id ?>");
+    var array = $('#dtr_harga').val().split(",");
+    $.
+
+    $(function() {
+        $('.xoxo').priceFormat({
+            prefix: '',
+            centsLimit: 0,
+            thousandsSeparator: '.',
+        });
+    });
+
     $(function() {
         $("#example1").DataTable({
             "responsive": true,
