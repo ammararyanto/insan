@@ -282,7 +282,7 @@ class Gudang extends CI_Controller
     function hapusBarangMasuk($bm_id)
     {
         $bm = $this->M_barang->getBarangMasukByIdRow($bm_id);
-        // $this->M_barang->deleteBarangMasuk($bm_id);
+        $this->M_barang->deleteBarangMasuk($bm_id);
         $this->session->set_flashdata('message', '<div class="alert alert-primary alert-dismissible fade show" role="alert">
                         ' . $bm['bm_nama'] . 'berhasil dihapus dari data pembelian barang
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
