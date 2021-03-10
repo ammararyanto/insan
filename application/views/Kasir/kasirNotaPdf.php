@@ -96,7 +96,15 @@
                 $diskon_fix = $transaksi['tr_diskon'] * $transaksi['tr_total'] / 100;
             }
 
-            $g_total = $transaksi['tr_total'] - $diskon_fix; ?>
+            $g_total = $transaksi['tr_total'] - $diskon_fix;
+
+            if ($transaksi['tr_status_pembayaran'] == 4) {
+                $status_pembayaran = 'LUNAS';
+            } else {
+                $status_pembayaran = 'BELUM LUNAS';
+            } ?>
+
+
 
             <tr>
                 <td width='25%'></td>
@@ -146,81 +154,37 @@
                 <td style='text-align:right' width='15%'><?= rupiah($transaksi['tr_uang']) ?></td>
             </tr>
             <tr>
-                <td width='25%' style='text-align:center'>(........................)</td>
-                <td width='25%' style='text-align:center'>(........................)</td>
-                <td colspan='3'>
+
+                <td colspan='5'>
                     <div style='text-align:right'>Kembalian : </div>
                 </td>
                 <td style='text-align:right' width='15%'><?= rupiah($transaksi['tr_kembalian']) ?></td>
             </tr>
         </table>
-
-        <table cellspacing='0' style='width:700px; font-size:12pt; font-family:calibri;  border-collapse: collapse;' border='1' hidden>
-
-            <tr align='center'>
-                <td width='10%'>Nama</td>
-                <td width='20%'>Nama Barang</td>
-                <td width='13%'>Harga</td>
-                <td width='4%'>Qty</td>
-                <td width='7%'>Discount</td>
-                <td width='13%'>Total Harga</td>
-            <tr>
-                <td>T501F</td>
-                <td>Asus Zenfone 5</td>
-                <td>Rp2.400.000,00</td>
-                <td>1</td>
-                <td>Rp0,00</td>
-                <td style='text-align:right'>Rp2.400.000,00</td>
-            <tr>
-                <td>T12</td>
-                <td>Tinta</td>
-                <td>Rp60.000,00</td>
-                <td>1</td>
-                <td>Rp0,00</td>
-                <td style='text-align:right'>Rp60.000,00</td>
-            </tr>
+        <table cellspacing='0' style='width:700px; font-size:12pt; font-family:calibri;  border-collapse: collapse; margin-top:5pt;' border='0'>
 
             <tr>
-                <td colspan='5'>
-                    <div style='text-align:right'>Total Yang Harus Di Bayar Adalah : </div>
-                </td>
-                <td style='text-align:right'>Rp2.460.000,00</td>
+                <td width='25%'></td>
+                <td width='25%'></td>
+                <td width='10%'></td>
+                <td width='5%'></td>
+                <td width='12%'></td>
+                <td width='12%'></td>
             </tr>
             <tr>
-                <td colspan='6'>
-                    <div style='text-align:right'>Terbilang : Dua Juta Empat Ratus Enam Puluh Ribu Rupiah</div>
+                <td width='25%' style='text-align:center'>(........................)</td>
+                <td width='25%' style='text-align:center'>(........................)</td>
+                <td colspan='3'>
+                    <div style='text-align:right'>Status Transaksi </div>
                 </td>
-            </tr>
-            <tr>
-                <td colspan='5'>
-                    <div style='text-align:right'>Cash : </div>
-                </td>
-                <td style='text-align:right'>Rp2.460.000,00</td>
-            </tr>
-            <tr>
-                <td colspan='5'>
-                    <div style='text-align:right'>Kembalian : </div>
-                </td>
-                <td style='text-align:right'>Rp0,00</td>
-            </tr>
-            <tr>
-                <td colspan='5'>
-                    <div style='text-align:right'>DP : </div>
-                </td>
-                <td style='text-align:right'>Rp0,00</td>
-            </tr>
-            <tr>
-                <td colspan='5'>
-                    <div style='text-align:right'>Sisa : </div>
-                </td>
-                <td style='text-align:right'>Rp0,00</td>
+                <td style='text-align:right; font-weight:bold' width='15%'><?= $status_pembayaran ?></td>
             </tr>
         </table>
 
 
     </center>
     <script>
-        window.addEventListener("load", window.print());
+        // window.addEventListener("load", window.print());
     </script>
 </body>
 

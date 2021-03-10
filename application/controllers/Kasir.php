@@ -490,10 +490,7 @@ class Kasir extends CI_Controller
 
 		// deteksi lunas atau belum 
 		$grand_total = $subtotal - $nom_diskon;
-		if ($transaksi['tr_uang'] >= $grand_total) {
-			// ini lunas
-			$s_pembayaran = 4;
-		} else {
+		if ($grand_total < 1) {
 			if ($transaksi['tr_status_pembayaran'] == 3) {
 				//status tetep hutang
 				$s_pembayaran = 3;
@@ -501,7 +498,21 @@ class Kasir extends CI_Controller
 				//status belum lunas
 				$s_pembayaran = 1;
 			}
+		} else {
+			if ($transaksi['tr_uang'] >= $grand_total) {
+				// ini lunas
+				$s_pembayaran = 4;
+			} else {
+				if ($transaksi['tr_status_pembayaran'] == 3) {
+					//status tetep hutang
+					$s_pembayaran = 3;
+				} else {
+					//status belum lunas
+					$s_pembayaran = 1;
+				}
+			}
 		}
+
 
 		// perhitunga kembalian
 		$kembalian = 0;
