@@ -652,7 +652,7 @@ class Kasir extends CI_Controller
 			"tr_tgl_selesai" => $dtNow,
 		];
 		$this->M_Transaksi->updateTransaksi($data_tr, $transaksi_id);
-		redirect('Kasir/cetakNota/' . $transaksi_id);
+		redirect('Kasir/printNota/' . $transaksi_id);
 		// $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
 		//                Terima Kasih, Pengambilan Transaksi atas nama <strong>' . $transaksi['p_nama'] . '</strong> Telah Berhasil Dikonfirmasi
 		//                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -814,5 +814,13 @@ class Kasir extends CI_Controller
 		$this->load->view('Admin/Menu', $data);
 		$this->load->view('Kasir/kasirListBarang', $data);
 		$this->load->view('Admin/footer');
+	}
+
+	function printNota($transaksi_id)
+	{
+		// $transaksi_id = 'T210309001';
+		$data['transaksi'] = $this->M_Transaksi->getTransaksiByIdRow($transaksi_id);
+		$data['detail_transaksi'] = $this->M_Transaksi->getDetailTransaksiById($transaksi_id);
+		$this->load->view('Kasir/kasirNotaPdf', $data);
 	}
 }

@@ -241,7 +241,7 @@
                                             <hr>
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <a href="<?= base_url('kasir/actionAmbil/') . $transaksi_id ?>" class="btn btn-primary float-right"><i class="fas fa-handshake"> </i> Konfirmasi Pengambilan</a>
+                                                    <a href="<?= base_url('kasir/actionAmbil/') . $transaksi_id ?>" target="_blank" class="btn btn-primary float-right"><i class="fas fa-handshake"> </i> Konfirmasi Pengambilan</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -274,7 +274,7 @@
                                         </button>
 
                                         <a href="<?= base_url('kasir/actionHutang/') . $transaksi_id ?>" class="btn btn-warning float-right ml-2" <?= $hutang_hidden ?>> Hutang</a>
-                                        <a href="<?= base_url('kasir/actionHutang/') . $transaksi_id ?>" class="btn btn-primary float-right" <?= $print_hidden ?>> Cetak Nota</a>
+                                        <a href="<?= base_url('kasir/printNota/') . $transaksi_id ?>" target="_blank" class="btn btn-primary float-right" <?= $print_hidden ?>> Cetak Nota</a>
 
 
 
