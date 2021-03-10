@@ -26,7 +26,7 @@ class Gudang extends CI_Controller
         // exit();
         $this->load->view('Admin/header', $data);
         $this->load->view('Admin/Menu', $data);
-        $this->load->view('Gudang/gudangListBarang', $data);
+        $this->load->view('Gudang/gudangDataBarang', $data);
         $this->load->view('Admin/footer');
     }
 
