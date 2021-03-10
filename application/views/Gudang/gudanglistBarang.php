@@ -46,11 +46,11 @@
                                                     <th>ID Barang</th>
                                                     <th>Nama Barang </th>
                                                     <th>Satuan</th>
-                                                    <th>Harga Pokok</th>
-                                                    <th>Harga Jual 1</th>
-                                                    <th>Harga Jual 2</th>
-                                                    <th>Harga Jual 3</th>
-                                                    <th>Stok</th>
+                                                    <th hidden>Harga Pokok</th>
+                                                    <th hidden>Harga Jual 1</th>
+                                                    <th hidden>Harga Jual 2</th>
+                                                    <th hidden>Harga Jual 3</th>
+                                                    <th hidden>Stok</th>
                                                     <th>Tanggal Input</th>
                                                     <th>Terakhir Update</th>
                                                     <th>Penginput</th>
@@ -66,7 +66,7 @@
                                                 $tgl_create = date_indo($dt_create);
                                                 $jam_create = date('H:i', $ts_create);
 
-                                                $ts_update = strtotime($b['barang_tgl_create']);
+                                                $ts_update = strtotime($b['barang_tgl_update']);
                                                 $dt_update = date('Y-m-d', $ts_update);
                                                 $tgl_update = date_indo($dt_update);
                                                 $jam_update = date('H:i', $ts_update);
@@ -77,15 +77,20 @@
                                                     <td> <?= $b['barang_id'] ?></td>
                                                     <td> <?= $b['barang_nama'] ?></td>
                                                     <td> <?= $b['sat_barang_nama'] ?></td>
-                                                    <td> <?= $b['barang_harpok'] ?></td>
-                                                    <td> <?= $b['barang_harjul'] ?></td>
-                                                    <td> <?= $b['barang_harjul2'] ?></td>
-                                                    <td> <?= $b['barang_harjul3'] ?></td>
-                                                    <td> <?= $b['barang_stok'] ?></td>
+                                                    <td hidden> <?= $b['barang_harpok'] ?></td>
+                                                    <td hidden> <?= $b['barang_harjul'] ?></td>
+                                                    <td hidden> <?= $b['barang_harjul2'] ?></td>
+                                                    <td hidden> <?= $b['barang_harjul3'] ?></td>
+                                                    <td hidden> <?= $b['barang_stok'] ?></td>
                                                     <td> <?= $tgl_create . ' ' . $jam_create ?></td>
                                                     <td> <?= $tgl_update . ' ' . $jam_update ?></td>
                                                     <td> <?= $b['user_nama'] ?></td>
-                                                    <td><button onclick="edit('<?= $b['barang_id'] ?>')" type="button" class="btn btn-dangers btn-xs"><span class="fas fa-file"></span></button><button onclick="alert('Hapus Hubungi Admin')" type="button" class="btn btn-dangers btn-xs"><span class="fas fa-trash"></span></button></td>
+                                                    <td>
+                                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                                            <a onclick="edit('<?= $b['barang_id'] ?>')" class="btn btn-secondary btn-sm" href="#" data-toggle="tooltip" title="Bayar"><i class="fas fa-edit"></i></i></a>
+                                                            <a onclick="alert('Hapus Hubungi IT')" class="btn btn-secondary btn-sm konfirmasi-hapus" href="#" data-toggle="tooltip" id="" title="Bayar"><i class="fas fa-trash"></i></i></a>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             <?php
                                             }
@@ -116,7 +121,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="form-group">
+                            <div class="form-group" hidden>
                                 <label for="kabar">Kode Barang</label>
                                 <input class="form-control form-control-sm" type="text" placeholder="kode" id="b_id" name="b_id" autocomplete="off">
                             </div>
@@ -133,30 +138,30 @@
                                     <?php } ?>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" hidden>
                                 <label for="satuan">Harga Pokok</label>
                                 <input class="form-control form-control-sm" type="text" placeholder="- masukan harga pokok/beli barang -" id="b_harpok" name="b_harpok" autocomplete="off">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" hidden>
                                 <label for="satuan" id="txharjul" style="display: none;">Harga Jual</label>
                                 <label for="satuan" id="tyharjul">Harga Jual 1 (1-50 Lembar)</label>
                                 <input class="form-control form-control-sm" type="text" placeholder="- masukan harga penjualan barang untuk cetak 1-50 lembar -" id="b_harjul" name="b_harjul" autocomplete="off">
                             </div>
 
-                            <div class="form-group" id="vharjul2">
+                            <div class="form-group" id="vharjul2" hidden>
                                 <label for="satuan">Harga Jual 2 (51-100 Lembar)</label>
                                 <input class="form-control form-control-sm" type="text" placeholder="- masukan harga penjualan barang untuk cetak 51-100 lembar - " id="b_harjul2" name="b_harjul2" autocomplete="off">
                             </div>
-                            <div class="form-group" id="vharjul3">
+                            <div class="form-group" id="vharjul3" hidden>
                                 <label for="satuan">Harga Jual 3 (> 100 Lemabr)</label>
                                 <input class="form-control form-control-sm" type="text" placeholder="- masukan harga penjualan barang untuk cetak lebih dari 100 lembar -" id="b_harjul3" name="b_harjul3" autocomplete="off">
                             </div>
 
-                            <div id="field_stok" class="form-group">
+                            <div id="field_stok" class="form-group" hidden>
                                 <label for="satuan">Stok Awal</label>
                                 <input class="form-control form-control-sm" type="text" placeholder="- masukan stok awal barang -" id="b_stok" name="b_stok" autocomplete="off">
                             </div>
-                            <div id="unl_stok" class="custom-control custom-checkbox">
+                            <div id="unl_stok" class="custom-control custom-checkbox" hidden>
                                 <input type="checkbox" class="custom-control-input" id="b_unlimited" name="b_unlimited" value="1" onchange="hide_stok_input()">
                                 <label class="custom-control-label" for="b_unlimited">Stok Unlimited</label>
                             </div>

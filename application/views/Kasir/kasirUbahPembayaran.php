@@ -149,7 +149,7 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <form action="<?= base_url() ?>kasir/actionUbahPembayaran/<?= $transaksi['tr_id'] ?>" method="POST">
-                                <div class="row">
+                                <div class="row my-2">
                                     <div class="col-lg-4 col-4">
                                         <div class="callout callout-info py-1">
                                             <p class="mb-1 font-weight-normal text-info">Total Biaya </p>
@@ -255,19 +255,26 @@
                                         $jam_ambil = date('H:i', $ts_ambil);
                                         ?>
 
-                                        <div class="alert alert-success" role="alert">
+                                        <div class="alert alert-info" role="alert">
                                             <p class="text-justify"> <strong>Informasi,</strong> Transaksi ini sudah diambil oleh pelanggan pada tanggal <strong> <?= $tgl_ambil ?></strong> dan pukul <strong><?= $jam_ambil ?></strong></p>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12">
+
+                                    <div class="col-lg-12" <?= $info_hidden ?>>
+                                        <div class="alert alert-info" role="alert">
+                                            <p class="text-justify"> <strong>Informasi !</strong> Pengambilan barang dapat dilakukan jika pembayaran transaksi sudah mencapai <strong>KELUNASAN</strong> atau transaksi sudah terkonfirmasi sebagai <strong>HUTANG</strong> </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 mt-1">
                                         <!-- <input type="submit" value="Bayar" class="ml-3 btn btn-success float-right">
                                     <input type="submit" value="Bayar" class="ml-3 btn btn-success float-right"> -->
 
-                                        <button type="submit" name="submit" value="1" class="btn btn-success btn-icon-split float-right" <?= $bayar_hidden ?>>
+                                        <button type="submit" name="submit" value="1" class="btn btn-success btn-icon-split float-right ml-2" <?= $bayar_hidden ?>>
                                             <span class="text">Submit Pembayaran</span>
                                         </button>
 
-                                        <a href="<?= base_url('kasir/actionHutang/') . $transaksi_id ?>" class="btn btn-warning float-right mr-2" <?= $hutang_hidden ?>> Hutang</a>
+                                        <a href="<?= base_url('kasir/actionHutang/') . $transaksi_id ?>" class="btn btn-warning float-right ml-2" <?= $hutang_hidden ?>> Hutang</a>
+                                        <a href="<?= base_url('kasir/actionHutang/') . $transaksi_id ?>" class="btn btn-primary float-right" <?= $print_hidden ?>> Cetak Nota</a>
 
 
 

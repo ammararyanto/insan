@@ -76,20 +76,20 @@ class Gudang extends CI_Controller
                     </div>';
 
 
-        $output .= '<div class="form-group">
+        $output .= '<div class="form-group" hidden>
                                 <label for="satuan">Harga Pokok</label>
                                 <input value="' . $data_barang['barang_harpok'] . '" class="form-control form-control-sm" type="text" placeholder="Harga Pokok" id="b_harpok_edit" name="b_harpok_edit" autocomplete="off">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" hidden>
                                 <label for="satuan" id="txharjul_edit" style="display: ' . $xharjul . ';">Harga Jual</label>
                                 <label for="satuan" id="tyharjul_edit" style="display: ' . $yharjul . ';">Harga Jual 1 (1-50 Lembar)</label>
                                 <input value="' . $data_barang['barang_harjul'] . '" class="form-control form-control-sm" type="text" placeholder="Harga Jual" id="b_harjul_edit" name="b_harjul_edit" autocomplete="off">
                             </div>
-                            <div class="form-group" id="vharjul2_edit"  style="display: ' . $harjul_hidden . ';">
+                            <div class="form-group" id="vharjul2_edit"  style="display: ' . $harjul_hidden . ';" hidden> 
                                 <label for="satuan">Harga Jual 2 (51-100 Lembar)</label>
                                 <input value="' . $data_barang['barang_harjul2'] . '" class="form-control form-control-sm" type="text" placeholder="- masukan harga penjualan barang untuk cetak 51-100 lembar - " id="b_harjul2_edit" name="b_harjul2_edit" autocomplete="off">
                             </div>
-                            <div class="form-group" id="vharjul3_edit" style="display: ' . $harjul_hidden . ';">
+                            <div class="form-group" id="vharjul3_edit" style="display: ' . $harjul_hidden . ';" hidden>
                                 <label for="satuan">Harga Jual 3 (> 100 Lemabr)</label>
                                 <input  value="' . $data_barang['barang_harjul3'] . '"class="form-control form-control-sm" type="text" placeholder="- masukan harga penjualan barang untuk cetak lebih dari 100 lembar -" id="b_harjul3_edit" name="b_harjul3_edit" autocomplete="off">
                             </div>
@@ -122,26 +122,34 @@ class Gudang extends CI_Controller
 
         $nama = $this->input->post('b_nama');
         $satuan = $this->input->post('b_satuan');
-        $harpok = $this->input->post('b_harpok');
-        $harjul = $this->input->post('b_harjul');
+        // $harpok = $this->input->post('b_harpok');
+        // $harjul = $this->input->post('b_harjul');
 
-        if ($satuan == 2) {
-            $harjul2 = $this->input->post('b_harjul2');
-            $harjul3 = $this->input->post('b_harjul3');
-        } else {
-            $harjul2 = '';
-            $harjul3 = '';
-        }
+        $harpok = 0;
+        $harjul = 0;
+        $harjul2 = 0;
+        $harjul3 = 0;
+
+        // if ($satuan == 2) {
+        //     $harjul2 = $this->input->post('b_harjul2');
+        //     $harjul3 = $this->input->post('b_harjul3');
+        // } else {
+        //     $harjul2 = '';
+        //     $harjul3 = '';
+        // }
 
         $user_id = $user['user_id'];
-        $unlimited = $this->input->post('b_unlimited');
-        if ($unlimited == 1) {
-            $is_unlimited = 1;
-            $stok = 99;
-        } else {
-            $is_unlimited = 0;
-            $stok = $this->input->post('b_stok');
-        }
+        // $unlimited = $this->input->post('b_unlimited');
+        // if ($unlimited == 1) {
+        //     $is_unlimited = 1;
+        //     $stok = 99;
+        // } else {
+        //     $is_unlimited = 0;
+        //     $stok = $this->input->post('b_stok');
+        // }
+
+        $is_unlimited = 1;
+        $stok = 99;
 
         $this->M_barang->insertBarang(
             $id,
@@ -174,18 +182,24 @@ class Gudang extends CI_Controller
         $id = $this->input->post('b_id_edit');
         $nama = $this->input->post('b_nama_edit');
         $satuan = $this->input->post('b_satuan_edit');
-        $harpok = $this->input->post('b_harpok_edit');
-        $harjul = $this->input->post('b_harjul_edit');
-        $harjul2 = $this->input->post('b_harjul2_edit');
-        $harjul3 = $this->input->post('b_harjul3_edit');
+        // $harpok = $this->input->post('b_harpok_edit');
+        // $harjul = $this->input->post('b_harjul_edit');
+        // $harjul2 = $this->input->post('b_harjul2_edit');
+        // $harjul3 = $this->input->post('b_harjul3_edit');
 
-        if ($satuan == 2) {
-            $harjul2 = $this->input->post('b_harjul2_edit');
-            $harjul3 = $this->input->post('b_harjul3_edit');
-        } else {
-            $harjul2 = '';
-            $harjul3 = '';
-        }
+        $harpok = 0;
+        $harjul = 0;
+        $harjul2 = 0;
+        $harjul3 = 0;
+
+
+        // if ($satuan == 2) {
+        //     $harjul2 = $this->input->post('b_harjul2_edit');
+        //     $harjul3 = $this->input->post('b_harjul3_edit');
+        // } else {
+        //     $harjul2 = '';
+        //     $harjul3 = '';
+        // }
         $user_id = $user['user_id'];
 
         $data_barang = [

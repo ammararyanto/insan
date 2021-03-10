@@ -93,6 +93,12 @@ class Kasir extends CI_Controller
 		$data['transaksi_id'] = $transaksi_id;
 		$data['transaksi'] = $this->M_Transaksi->getTransaksiByIdRow($transaksi_id);
 
+		$data_dtr = $this->M_Transaksi->getDetailTransaksiById($transaksi_id);
+		$data['total_harga'] = 0;
+		foreach ($data_dtr as $dtr) {
+			$data['total_harga'] = $data['total_harga'] + $dtr['dtr_total'];
+		}
+
 		$this->load->view('Admin/header', $data);
 		$this->load->view('Admin/Menu', $data);
 		$this->load->view('Kasir/kasirDetailTransaksi', $data);
@@ -178,16 +184,17 @@ class Kasir extends CI_Controller
 		$cart_list = $this->M_Transaksi->getDetailTransaksiById($id_transaksi);
 
 		$output = '';
+		$output .= '<div class="overflow-auto" style="overflow-x:auto;">';
 		$output .= '<table class="table" id="cartTable">
                         <thead>
                             <tr>
-                                <th>Nama Barang</th>
+                                <th style="width:35%">Nama Barang</th>
                                 <th style="width:10%">Panjang (cm)</th>
                                 <th style="width:10%">Lebar (cm)</th>
                                 <th style="width:10%">Jumlah Cetak(pcs)</th>
                                 <th style="width:10%">Harga satuan</th>
-                                <th>Total Harga</th>
-                                <th>Action</th>
+                                <th style="width:15%" class="text-right">Total Harga</th>
+                                <th style="width:10%">Action</th>
                             </tr>
                         </thead>
                         <tbody id="tbKeranjang">';
@@ -197,37 +204,47 @@ class Kasir extends CI_Controller
 				$nmbr = $nmbr + 1;
 				if ($cl['barang_satuan'] == 1) {
 					$output .= '<tr class="records" id="row' . $nmbr . '">
-                                <td class="pt-3">' . $cl['barang_nama'] . ' <input class=" form-control form-control-sm" id="dtr_total" type="text" value="' . $cl['dtr_total'] . '" hidden> <input class=" form-control form-control-sm" name="" id="dtr_id" type="text" value="' . $cl['dtr_id'] . '" hidden></td>
+                                <td class="pt-3">' . $cl['barang_nama'] . ' <input class=" form-control form-control-sm" id="dtr_total" type="text" value="' . $cl['dtr_total'] . '" hidden> <input class=" form-control form-control-sm" name="" id="dtr_id" type="text" value="' . $cl['dtr_id'] . '" hidden> <input id="dtr_satuan" type="text" value="' . $cl['sat_barang_id'] . '" hidden> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '"> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '"> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_jumlah" style="text-align: center;" type="text" value="' . $cl['dtr_jumlah'] . '"> </td>
-                                <td style="width:12%"> <input class=" form-control form-control-sm xoxo" onchange="sum(' . $nmbr . ')" name="" id="dtr_harga" style="text-align: right;" type="text" value="' . $cl['dtr_harga'] . '">  </td>
-                                <td class="pt-3" id="vdtr_total">' . $cl['dtr_total'] . ' </td>
+                                <td style="width:12%"> <input class=" form-control form-control-sm dtr-harga" onchange="sum(' . $nmbr . ')" name="" id="dtr_harga" style="text-align: right;" type="text" value="' . $cl['dtr_harga'] . '">  </td>
+                                <td class="pt-3 dtr-total text-right" id="vdtr_total">' . $cl['dtr_total'] . ' </td>
                                 <td> <a href="#" onclick="hapusKeranjang(' . $nmbr . ')" class="badge badge-danger btn_del' . $nmbr . '" data-detid="' . $cl['dtr_id'] . '" data-detnama="' . $cl['barang_nama'] . '">Hapus</a> </td>
                             </tr>';
 				} else if ($cl['barang_satuan'] == 2) {
 					$output .= '<tr class="records" id="row' . $nmbr . '">
-                                <td class="pt-3">' . $cl['barang_nama'] . ' <input class=" form-control form-control-sm" id="dtr_total" type="text" value="' . $cl['dtr_total'] . '" hidden> <input class=" form-control form-control-sm" name="" id="dtr_id" type="text" value="' . $cl['dtr_id'] . '" hidden></td>
+                                <td class="pt-3">' . $cl['barang_nama'] . ' <input class=" form-control form-control-sm" id="dtr_total" type="text" value="' . $cl['dtr_total'] . '" hidden> <input class=" form-control form-control-sm" name="" id="dtr_id" type="text" value="' . $cl['dtr_id'] . '" hidden> <input id="dtr_satuan" type="text" value="' . $cl['sat_barang_id'] . '" hidden></td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '" hidden> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '" hidden> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_jumlah" style="text-align: center;" type="text" value="' . $cl['dtr_jumlah'] . '"> </td>
-                                <td style="width:12%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_harga"  style="text-align: right; "type="text" value="' . $cl['dtr_harga'] . '" >  </td>
-                                <td class="pt-3" id="vdtr_total">' . $cl['dtr_total'] . ' </td>
+                                <td style="width:12%"> <input class=" form-control form-control-sm dtr-harga" onchange="sum(' . $nmbr . ')" name="" id="dtr_harga"  style="text-align: right; "type="text" value="' . $cl['dtr_harga'] . '" >  </td>
+                                <td class="pt-3 dtr-total text-right" id="vdtr_total">' . $cl['dtr_total'] . ' </td>
+                                <td> <a href="#" onclick="hapusKeranjang(' . $nmbr . ')" class="badge badge-danger btn_del' . $nmbr . '" data-detid="' . $cl['dtr_id'] . '" data-detnama="' . $cl['barang_nama'] . '">Hapus</a> </td>
+                            </tr>';
+				} else if ($cl['barang_satuan'] == 3) {
+					$output .= '<tr class="records" id="row' . $nmbr . '">
+                                <td class="pt-3">' . $cl['barang_nama'] . ' <input class=" form-control form-control-sm" id="dtr_total" type="text" value="' . $cl['dtr_total'] . '" hidden> <input class=" form-control form-control-sm" name="" id="dtr_id" type="text" value="' . $cl['dtr_id'] . '" hidden> <input id="dtr_satuan" type="text" value="' . $cl['sat_barang_id'] . '" hidden></td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '" hidden> </td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '" hidden> </td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_jumlah" style="text-align: center;" type="text" value="' . $cl['dtr_jumlah'] . '" hidden> </td>
+                                <td style="width:12%"> <input class=" form-control form-control-sm dtr-harga" onchange="sum(' . $nmbr . ')" name="" id="dtr_harga" style="text-align: right; style="text-align: left;" type="text" value="' . $cl['dtr_harga'] . '">  </td>
+                                <td class="pt-3 dtr-total text-right" id="vdtr_total" >' . $cl['dtr_total'] . ' </td>
                                 <td> <a href="#" onclick="hapusKeranjang(' . $nmbr . ')" class="badge badge-danger btn_del' . $nmbr . '" data-detid="' . $cl['dtr_id'] . '" data-detnama="' . $cl['barang_nama'] . '">Hapus</a> </td>
                             </tr>';
 				} else {
 					$output .= '<tr class="records" id="row' . $nmbr . '">
-                                <td class="pt-3">' . $cl['barang_nama'] . ' <input class=" form-control form-control-sm" id="dtr_total" type="text" value="' . $cl['dtr_total'] . '" hidden> <input class=" form-control form-control-sm" name="" id="dtr_id" type="text" value="' . $cl['dtr_id'] . '" hidden></td>
-                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '" hidden> </td>
-                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '" hidden> </td>
-                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_jumlah" style="text-align: center;" type="text" value="' . $cl['dtr_jumlah'] . '" hidden> </td>
-                                <td style="width:12%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_harga" style="text-align: right; style="text-align: left;" type="text" value="' . $cl['dtr_harga'] . '">  </td>
-                                <td class="pt-3" id="vdtr_total" >' . $cl['dtr_total'] . ' </td>
+                                <td class="pt-3">' . $cl['barang_nama'] . ' <input class=" form-control form-control-sm" id="dtr_total" type="text" value="' . $cl['dtr_total'] . '" hidden> <input class=" form-control form-control-sm" name="" id="dtr_id" type="text" value="' . $cl['dtr_id'] . '" hidden> <input id="dtr_satuan" type="text" value="' . $cl['sat_barang_id'] . '" hidden></td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '"> </td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '"> </td>
+                                <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_jumlah" style="text-align: center;" type="text" value="' . $cl['dtr_jumlah'] . '"> </td>
+                                <td style="width:12%"> <input class=" form-control form-control-sm dtr-harga" onchange="sum(' . $nmbr . ')" name="" id="dtr_harga" style="text-align: right;" type="text" value="' . $cl['dtr_harga'] . '">  </td>
+                                <td class="pt-3 dtr-total text-right" id="vdtr_total">' . $cl['dtr_total'] . ' </td>
                                 <td> <a href="#" onclick="hapusKeranjang(' . $nmbr . ')" class="badge badge-danger btn_del' . $nmbr . '" data-detid="' . $cl['dtr_id'] . '" data-detnama="' . $cl['barang_nama'] . '">Hapus</a> </td>
                             </tr>';
 				}
 			};
-			$output .= '</tbody></table>';
+			$output .= '</tbody></table> </div>';
 		} else {
 			$output .= '</tbody></table>';
 			$output .= '<div class="col-lg-12" id="info_cartKosong">
@@ -236,6 +253,23 @@ class Kasir extends CI_Controller
                                                 </div>
                                             </div>';
 		}
+		$output .= "<script>
+    $(function() {
+        $('.dtr-harga').priceFormat({
+            prefix: '',
+            centsLimit: 0,
+            thousandsSeparator: '.',
+        });
+    });
+
+	$(function() {
+        $('.dtr-total').priceFormat({
+            prefix: '',
+            centsLimit: 0,
+            thousandsSeparator: '.',
+        });
+    });
+</script>";
 
 
 		return $output;
@@ -244,11 +278,13 @@ class Kasir extends CI_Controller
 	function updateDataKeranjang($detail_transaksi_id)
 	{
 		$data_dtr = $this->M_Transaksi->getDetailTransaksiByIdRow($detail_transaksi_id);
+		$data_barang = $this->M_barang->getBarangDetail($data_dtr['barang_id']);
 
 		$dtr_panjang = $this->input->post('dtr_panjang');
 		$dtr_lebar = $this->input->post('dtr_lebar');
 		$dtr_jumlah = $this->input->post('dtr_jumlah');
 		$dtr_harga = $this->input->post('dtr_harga');
+		$dtr_harga = str_replace('.', '', $this->input->post('dtr_harga'));
 
 		// if ($data_dtr['barang_satuan'] == 2) {
 		// 	if ($dtr_jumlah <= 50) {
@@ -265,7 +301,13 @@ class Kasir extends CI_Controller
 		// }
 
 		$harjul = $dtr_harga;
-		$dtr_total = $dtr_panjang * $dtr_lebar / 10000 * $dtr_jumlah * $harjul;
+
+		if ($data_barang['sat_barang_id'] == 4) {
+			$dtr_total = $harjul;
+		} else {
+			$dtr_total = $dtr_panjang * $dtr_lebar / 10000 * $dtr_jumlah * $harjul;
+		}
+
 
 		$data_dtr = [
 			"dtr_panjang" => $dtr_panjang,
@@ -536,8 +578,15 @@ class Kasir extends CI_Controller
 		}
 
 		$data['done_hidden'] = ' hidden';
+		$data['print_hidden'] = ' hidden';
 		if ($data['transaksi']['tr_status_pengerjaan'] == 2) {
 			$data['done_hidden'] = ' ';
+			$data['print_hidden'] = ' ';
+		}
+
+		$data['info_hidden'] = ' ';
+		if ($data['transaksi']['tr_status_pengerjaan'] == 2 || $data['transaksi']['tr_status_pembayaran'] == 4 || $data['transaksi']['tr_status_pembayaran'] == 3) {
+			$data['info_hidden'] = ' hidden';
 		}
 
 		$data['form_hidden'] = '';

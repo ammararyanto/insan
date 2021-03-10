@@ -47,6 +47,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Nama Barang</th>
+                                                        <th>Satuan</th>
                                                         <th style="width:20%">Harga</th>
                                                         <th style="width:10%">Action</th>
                                                     </tr>
@@ -57,6 +58,7 @@
                                                     $nmbr =  $nmbr + 1; ?>
                                                     <tr>
                                                         <td><?= $brg['barang_nama'] ?></td>
+                                                        <td><?= $brg['sat_barang_nama'] ?></td>
                                                         <td><?= $brg['barang_harjul'] ?></td>
                                                         <td><button type="button" onclick="tambahKeranjang(<?= $nmbr ?>)" class="ml-3 btn btn-sm btn-primary btn_add<?= $nmbr ?>" name="btn_add" data-barangid="<?= $brg['barang_id'] ?>" data-barangnm="<?= $brg['barang_nama'] ?>"><i class="fas fa-fw fa-plus"></i> </button></td>
                                                     </tr>
@@ -85,7 +87,7 @@
                                         <div class="col-lg-12">
                                             <div class="callout callout-info py-1">
                                                 <p class="mb-1">Total Biaya </p>
-                                                <h5 id="display_total" class="mb-1 font-weight-bold"><?= money($transaksi['tr_total']) ?></h5>
+                                                <h5 id="display_total" class="mb-1 font-weight-bold"><?= money($total_harga) ?></h5>
                                             </div>
                                         </div>
                                         <div class="col-lg-12">
@@ -216,8 +218,7 @@
 
 <script>
     $('#cart_col').load("<?php echo base_url() ?>kasir/tampilIsiKeranjang/<?= $transaksi_id ?>");
-    var array = $('#dtr_harga').val().split(",");
-    $.
+
 
     $(function() {
         $('.xoxo').priceFormat({
@@ -314,7 +315,8 @@
         var $panjang = parseInt($($rows).find('#dtr_panjang').val());
         var $lebar = parseInt($($rows).find('#dtr_lebar').val());
         var $jumlah = parseInt($($rows).find('#dtr_jumlah').val());
-        var $harga = parseInt($($rows).find('#dtr_harga').val());
+        var $harga = ($rows).find('#dtr_harga').val();
+        var $satuan = ($rows).find('#dtr_satuan').val();
 
         var Toast = Swal.mixin({
             toast: true,
@@ -335,24 +337,49 @@
             },
             success: function(data) {
                 var $harjul = data;
+                // alert($harjul);
 
-                var $subtot = $panjang * $lebar * $jumlah * $harjul / 10000;
+                if ($satuan == 4) {
+                    var $subtot = $harjul;
+                } else {
+                    var $subtot = $panjang * $lebar * $jumlah * $harjul / 10000;
+                }
                 // alert($harjul);
                 if (!isNaN($subtot)) {
                     // $($rows).find('#vdtr_harga').html($harjul);
                     $($rows).find('#vdtr_total').html($subtot);
+                    $($rows).find('#vdtr_total').priceFormat({
+                        prefix: '',
+                        centsLimit: 0,
+                        thousandsSeparator: '.',
+                    });
 
                     $($rows).find('#dtr_harga').val($harjul);
                     $($rows).find('#dtr_total').val($subtot);
+                    $($rows).find('#dtr_harga').priceFormat({
+                        prefix: '',
+                        centsLimit: 0,
+                        thousandsSeparator: '.',
+                    });
 
                     // var total=$subtot;  	
                     totalharga();
                 } else {
                     // $($rows).find('#vdtr_harga').html($harjul);
                     $($rows).find('#vdtr_total').html($subtot);
+                    $($rows).find('#vdtr_total').priceFormat({
+                        prefix: '',
+                        centsLimit: 0,
+                        thousandsSeparator: '.',
+                    });
 
                     $($rows).find('#dtr_harga').val($harjul);
                     $($rows).find('#dtr_total').val($subtot);
+                    $($rows).find('#dtr_harga').priceFormat({
+                        prefix: '',
+                        centsLimit: 0,
+                        thousandsSeparator: '.',
+                    });
                     //var total='0';  	
                     totalharga();
                 }

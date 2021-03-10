@@ -14,6 +14,10 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
+                <div class="col-lg-12 mb-3">
+                    <a href="<?= base_url('Laporan') ?>" class="btn btn-secondary mr-2 float-left"> <i class="fas fa-arrow-circle-left"></i> Kembali</a>
+
+                </div>
                 <div class="col-md-12">
                     <?= $this->session->flashdata('message'); ?>
                     <!-- /.card -->

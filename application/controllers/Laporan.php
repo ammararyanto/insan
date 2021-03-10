@@ -457,7 +457,7 @@ class Laporan extends CI_Controller
         $data['user_nama'] = $this->session->userdata('user_nama');
         $data['titel'] = "Persediaan";
         $data['jajal'] = "Persediaan";
-        $data['namamenu'] = "Laporam";
+        $data['namamenu'] = "Laporan";
         $data['martis'] = "";
         // $data['pengeluaran'] = $this->M_barang->getPengeluaranAll();
         $data['satuan_barang'] = $this->M_barang->getSatuanBarangAll();
@@ -554,7 +554,7 @@ class Laporan extends CI_Controller
         $data['user_nama'] = $this->session->userdata('user_nama');
         $data['titel'] = "Persediaan";
         $data['jajal'] = "Persediaan";
-        $data['namamenu'] = "Laporam";
+        $data['namamenu'] = "Laporan";
         $data['martis'] = "";
         // $data['pengeluaran'] = $this->M_barang->getPengeluaranAll();
         $data['satuan_barang'] = $this->M_barang->getSatuanBarangAll();
@@ -645,7 +645,7 @@ class Laporan extends CI_Controller
         $data['user_nama'] = $this->session->userdata('user_nama');
         $data['titel'] = "Persediaan";
         $data['jajal'] = "Persediaan";
-        $data['namamenu'] = "Laporam";
+        $data['namamenu'] = "Laporan";
         $data['martis'] = "";
         // $data['pengeluaran'] = $this->M_barang->getPengeluaranAll();
         $data['satuan_barang'] = $this->M_barang->getSatuanBarangAll();
