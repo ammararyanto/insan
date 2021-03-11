@@ -35,7 +35,7 @@
                                         Tambah Barang
                                     </button> -->
                                     <h6 class="m-0 font-weight-bold ">
-                                        <span class="breadcrumb-item">Daftar Pengeluaran</span>
+                                        <span class="breadcrumb-item">Daftar Transaksi</span>
 
                                         </span>
                                     </h6>

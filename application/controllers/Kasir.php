@@ -188,12 +188,13 @@ class Kasir extends CI_Controller
 		$output .= '<table class="table" id="cartTable">
                         <thead>
                             <tr>
-                                <th style="width:35%">Nama Barang</th>
+                                <th style="width:25%">Nama Barang</th>
+                                <th style="width:15%">Nama Barang</th>
                                 <th style="width:10%">Panjang (cm)</th>
                                 <th style="width:10%">Lebar (cm)</th>
                                 <th style="width:10%">Jumlah Cetak(pcs)</th>
-                                <th style="width:10%">Harga satuan</th>
-                                <th style="width:15%" class="text-right">Total Harga</th>
+                                <th style="width:10%" class="text-right">Harga satuan</th>
+                                <th style="width:10%" class="text-right">Total Harga</th>
                                 <th style="width:10%">Action</th>
                             </tr>
                         </thead>
@@ -204,6 +205,7 @@ class Kasir extends CI_Controller
 				$nmbr = $nmbr + 1;
 				if ($cl['barang_satuan'] == 1) {
 					$output .= '<tr class="records" id="row' . $nmbr . '">
+					<td style="width:10%"> <textarea class=" form-control form-control-sm" onchange="updateNama(' . $nmbr . ')" name="" id="dtr_nama" style="text-align: left;" type="text" value=""> ' . $cl['dtr_nama_file'] . '</textarea> </td>
                                 <td class="pt-3">' . $cl['barang_nama'] . ' <input class=" form-control form-control-sm" id="dtr_total" type="text" value="' . $cl['dtr_total'] . '" hidden> <input class=" form-control form-control-sm" name="" id="dtr_id" type="text" value="' . $cl['dtr_id'] . '" hidden> <input id="dtr_satuan" type="text" value="' . $cl['sat_barang_id'] . '" hidden> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '"> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '"> </td>
@@ -214,6 +216,7 @@ class Kasir extends CI_Controller
                             </tr>';
 				} else if ($cl['barang_satuan'] == 2) {
 					$output .= '<tr class="records" id="row' . $nmbr . '">
+					<td style="width:10%"> <textarea class=" form-control form-control-sm" onchange="updateNama(' . $nmbr . ')" name="" id="dtr_nama" style="text-align: left;" type="text" value=""></textarea> </td>
                                 <td class="pt-3">' . $cl['barang_nama'] . ' <input class=" form-control form-control-sm" id="dtr_total" type="text" value="' . $cl['dtr_total'] . '" hidden> <input class=" form-control form-control-sm" name="" id="dtr_id" type="text" value="' . $cl['dtr_id'] . '" hidden> <input id="dtr_satuan" type="text" value="' . $cl['sat_barang_id'] . '" hidden></td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '" hidden> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '" hidden> </td>
@@ -224,6 +227,7 @@ class Kasir extends CI_Controller
                             </tr>';
 				} else if ($cl['barang_satuan'] == 3) {
 					$output .= '<tr class="records" id="row' . $nmbr . '">
+					<td style="width:10%"> <textarea class=" form-control form-control-sm" onchange="updateNama(' . $nmbr . ')" name="" id="dtr_nama" style="text-align: left;" type="text" value=""> ' . $cl['dtr_nama_file'] . '</textarea> </td>
                                 <td class="pt-3">' . $cl['barang_nama'] . ' <input class=" form-control form-control-sm" id="dtr_total" type="text" value="' . $cl['dtr_total'] . '" hidden> <input class=" form-control form-control-sm" name="" id="dtr_id" type="text" value="' . $cl['dtr_id'] . '" hidden> <input id="dtr_satuan" type="text" value="' . $cl['sat_barang_id'] . '" hidden></td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '" hidden> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '" hidden> </td>
@@ -234,6 +238,7 @@ class Kasir extends CI_Controller
                             </tr>';
 				} else {
 					$output .= '<tr class="records" id="row' . $nmbr . '">
+					<td style="width:10%"> <textarea class=" form-control form-control-sm" onchange="updateNama(' . $nmbr . ')" name="" id="dtr_nama" style="text-align: left;" type="text" value="">' . $cl['dtr_nama_file'] . '</textarea> </td>
                                 <td class="pt-3">' . $cl['barang_nama'] . ' <input class=" form-control form-control-sm" id="dtr_total" type="text" value="' . $cl['dtr_total'] . '" hidden> <input class=" form-control form-control-sm" name="" id="dtr_id" type="text" value="' . $cl['dtr_id'] . '" hidden> <input id="dtr_satuan" type="text" value="' . $cl['sat_barang_id'] . '" hidden></td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_panjang" style="text-align: center;" type="text" value="' . $cl['dtr_panjang'] . '"> </td>
                                 <td style="width:10%"> <input class=" form-control form-control-sm" onchange="sum(' . $nmbr . ')" name="" id="dtr_lebar" style="text-align: center;" type="text" value="' . $cl['dtr_lebar'] . '"> </td>
@@ -320,6 +325,19 @@ class Kasir extends CI_Controller
 		// exit();
 		$this->M_Transaksi->updateDetailTransaksi($data_dtr, $detail_transaksi_id);
 		echo $harjul;
+	}
+
+	function updateNamaFileKeranjang($detail_transaksi_id)
+	{
+		$nama_file = $this->input->post('dtr_nama');;
+
+		$data_dtr = [
+			"dtr_nama_file" => $nama_file
+		];
+		// var_dump($data_dtr);
+		// exit();
+		$this->M_Transaksi->updateDetailTransaksi($data_dtr, $detail_transaksi_id);
+		echo $nama_file;
 	}
 
 	function transaksiBelumDiambil()
@@ -411,7 +429,8 @@ class Kasir extends CI_Controller
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Nama Barang / Layanan</th>
+                                                <th>Nama Layanan</th>
+                                                <th>Nama File</th>
                                                 <th>Panjang</th>
                                                 <th>Lebar</th>
                                                 <th style="width: 5%;">Jumlah Cetak(pcs)</th>
@@ -436,9 +455,16 @@ class Kasir extends CI_Controller
 			} else {
 				$jumlah = $dtr['dtr_jumlah'];
 			}
+
+			if ($dtr['dtr_nama_file']) {
+				$nama_file = $dtr['dtr_nama_file'];
+			} else {
+				$nama_file = '-';
+			}
 			$output .= '                    <tr>
                                             <td> ' . $no . '</td>
                                             <td> ' . $dtr['barang_nama'] . '</td>
+                                            <td> ' . $nama_file . '</td>
                                             <td class="text-center"> ' . $panjang . '</td>
                                             <td class="text-center"> ' . $lebar . '</td>
                                             <td class="text-center"> ' . $jumlah . '</td>

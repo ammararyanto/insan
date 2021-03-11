@@ -308,6 +308,40 @@
 
 
 <script>
+    function updateNama(urutan) {
+        var $rows = $('#row' + urutan);
+        var $nama_file = ($rows).find('#dtr_nama').val();
+        var $dtr_id = parseInt($($rows).find('#dtr_id').val());
+
+
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+
+        // alert('halo' + $nama_file);
+        $.ajax({
+            url: "<?= base_url(); ?>kasir/updateNamaFileKeranjang/" + $dtr_id,
+            method: "POST",
+            data: {
+                dtr_nama: $nama_file,
+            },
+            success: function(data) {
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Nama File Berhasil Diubah'
+                })
+
+                $($rows).find('#dtr_nama').val(data);
+
+            }
+        });
+
+    }
+
     function sum(urutan) {
         var $rows = $('#row' + urutan);
         // alert('Hore berhasill');

@@ -356,6 +356,20 @@ class Laporan extends CI_Controller
 
         if ($tr_fix) {
             $output = '';
+            $omset = 0;
+            foreach ($tr_fix as $x) {
+                if ($x['g_total'] == '') {
+                    $x['g_total'] = 0;
+                }
+                $omset = $omset + $x['g_total'];
+            }
+
+            $output .= '<div class="col-lg-12">
+                                            <div class="callout callout-info py-1">
+                                                <h5 class="mb-1 font-weight-bold">Total Omset : ' . rupiah($omset)  . ' </h5>
+                                            </div>
+
+                                        </div>';
             $output .= '<div class="col-lg-12 col-12">';
             $output .= '<div class="overflow-auto" style="overflow-x:auto;">
 
@@ -482,7 +496,23 @@ class Laporan extends CI_Controller
     {
         $data_pembelian = $this->M_barang->getLaporanPembelian($tgl1, $tgl2);
         if ($data_pembelian) {
-            $output = '';
+
+            $total_pembelian = 0;
+            foreach ($data_pembelian as $x) {
+                if ($x['bm_biaya'] == '') {
+                    $x['bm_biaya'] = 0;
+                }
+                $total_pembelian = $total_pembelian + $x['bm_biaya'];
+            }
+
+            $output = '<div class="col-lg-12">
+                                            <div class="callout callout-success py-1">
+                                                <h5 class="mb-1 font-weight-bold">Total Pembelian Barang : ' . rupiah($total_pembelian)  . '</h5>
+                                            </div>
+                                        </div>';
+
+
+            $output .= '';
             $output .= '<div class="col-lg-12 col-12">';
             $output .= '<div class="overflow-auto" style="overflow-x:auto;">
 
@@ -583,6 +613,20 @@ class Laporan extends CI_Controller
         $data_pengeluaran = $this->M_barang->getLaporanPengeluaran($tgl1, $tgl2);
         if ($data_pengeluaran) {
             $output = '';
+
+            $total_pengeluaran = 0;
+            foreach ($data_pengeluaran as $x) {
+                if ($x['peng_biaya'] == '') {
+                    $x['peng_biaya'] = 0;
+                }
+                $total_pengeluaran = $total_pengeluaran + $x['peng_biaya'];
+            }
+            $output .= '<div class="col-lg-12">
+                                            <div class="callout callout-danger py-1">
+                                                <h5 class="mb-1 font-weight-bold">Total Pengeluaran Operasional : ' . rupiah($total_pengeluaran)  . '</h5>
+                                            </div>
+
+                                        </div>';
             $output .= '<div class="col-lg-12 col-12">';
             $output .= '<div class="overflow-auto" style="overflow-x:auto;">
 
@@ -757,6 +801,50 @@ class Laporan extends CI_Controller
 
         if ($data_rekap) {
             $output = '';
+
+            $total_omset = 0;
+            $total_pembelian = 0;
+            $total_pengeluaran = 0;
+            foreach ($data_rekap as $x) {
+                // if ($x['g_total'] == '') {
+                //     $x['g_total'] = 0;
+                // }
+
+                // if ($x['bm_biaya'] == '') {
+                //     $x['bm_biaya'] = 0;
+                // }
+
+                // if ($x['peng_biaya'] == '') {
+                //     $x['peng_biaya'] = 0;
+                // }
+                $total_omset = $total_omset + $x['g_total'];
+                $total_pembelian = $total_pembelian + $x['bm_biaya'];
+                $total_pengeluaran = $total_pengeluaran + $x['peng_biaya'];
+            }
+
+            $output .= '<div class="col-lg-12">
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <div class="callout callout-info py-1">
+                                                    <p class="mb-1 font-weight-normal ">Total Omset </p>
+                                            <p id="display_total" id="vdiskon" class="mb-1 font-weight-bold">' . rupiah($total_omset) . '</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="callout callout-success py-1">
+                                                    <p class="mb-1 font-weight-normal">Total Pembelian Barang </p>
+                                            <p id="display_total" id="vdiskon" class="mb-1 font-weight-bold">' . rupiah($total_pembelian) . '</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="callout callout-danger py-1">
+                                                    <p class="mb-1 font-weight-normal">Total Pengeluaran Operasional </p>
+                                            <p id="display_total" id="vdiskon" class="mb-1 font-weight-bold">' . rupiah($total_pengeluaran) . '</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>';
+
             $output .= '<div class="col-lg-12 col-12">';
             $output .= '<div class="overflow-auto" style="overflow-x:auto;">
 

@@ -71,7 +71,8 @@
                                                     <thead>
                                                         <tr>
                                                             <th>No</th>
-                                                            <th>Nama Barang / Layanan</th>
+                                                            <th>Nama Layanan</th>
+                                                            <th>Nama File</th>
                                                             <th>Panjang</th>
                                                             <th>Lebar</th>
                                                             <th style="width: 5%;">Jumlah Cetak(pcs)</th>
@@ -97,10 +98,17 @@
                                                             $jumlah = $dtr['dtr_jumlah'];
                                                         }
 
+                                                        if ($dtr['dtr_nama_file']) {
+                                                            $nama_file = $dtr['dtr_nama_file'];
+                                                        } else {
+                                                            $nama_file = '-';
+                                                        }
+
                                                     ?>
                                                         <tr>
                                                             <td> <?= $no ?></td>
                                                             <td> <?= $dtr['barang_nama'] ?></td>
+                                                            <td> <?= $nama_file ?></td>
                                                             <td class="text-center"> <?= $panjang ?></td>
                                                             <td class="text-center"> <?= $lebar ?></td>
                                                             <td class="text-center"> <?= $jumlah ?></td>

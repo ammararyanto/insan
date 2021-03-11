@@ -30,7 +30,7 @@
                                         Tambah Barang
                                     </button> -->
                                     <h6 class="m-0 font-weight-bold ">
-                                        <span class="breadcrumb-item">Daftar Pengeluaran</span>
+                                        <span class="breadcrumb-item">Daftar Laporan Rekapitulasi</span>
 
                                         </span>
                                     </h6>
@@ -48,6 +48,7 @@
                                         </div>
                                     </div>
                                     <div class="row" id="view_tabel">
+
 
                                     </div>
 
