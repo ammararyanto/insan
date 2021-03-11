@@ -39,7 +39,6 @@ class M_Transaksi extends CI_Model
 			"p_nama" => $p_nama,
 			"p_nohp" => $p_nohp,
 		];
-
 		$this->db->insert('tbl_pelanggan', $data);
 	}
 	function insertTransaksi(
@@ -64,6 +63,7 @@ class M_Transaksi extends CI_Model
 			"tr_total" => $total,
 			"tr_diskon" => $diskon,
 			"tr_diskon_status" => $diskon_status,
+			"tr_ppn" => 0,
 			"tr_uang" => $uang,
 			"tr_uang_status" => $uang_status,
 			"tr_kembalian" => 0,

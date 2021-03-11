@@ -153,7 +153,7 @@
                                     <div class="col-lg-4 col-4">
                                         <div class="callout callout-info py-1">
                                             <p class="mb-1 font-weight-normal text-info">Total Biaya </p>
-                                            <p id="display_total" id="vtotal" class="mb-1 font-weight-bold"><?= money($transaksi['tr_total']) ?></p>
+                                            <p id="display_total" id="vtotal" class="mb-1 font-weight-bold"><?= money($grand_total) ?></p>
                                         </div>
                                     </div>
                                     <div class="col-lg-4 col-4">
@@ -206,7 +206,15 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-12 col-12">
+                                        <div class="form-group">
+                                            <label class="col-form-label-sm" for="diskon">PPN(%)</label>
+                                            <input type="text" class="form-control diskon" id="ppn" name="ppn" value="<?= $transaksi['tr_ppn'] ?>" placeholder="0">
+                                        </div>
+                                    </div>
                                 </div>
+
+
 
                                 <div class="row" <?= $form_hidden ?>>
                                     <div class="col-md-6 col-6">

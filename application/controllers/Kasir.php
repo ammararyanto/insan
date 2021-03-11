@@ -489,7 +489,10 @@ class Kasir extends CI_Controller
 		}
 
 		// deteksi lunas atau belum 
-		$grand_total = $subtotal - $nom_diskon;
+		$dpp_total = $subtotal - $nom_diskon;
+		$ppn_nom = $transaksi['tr_ppn'] * $dpp_total / 100;
+		$grand_total = $dpp_total + $ppn_nom;
+
 		if ($grand_total < 1) {
 			if ($transaksi['tr_status_pembayaran'] == 3) {
 				//status tetep hutang
@@ -536,6 +539,8 @@ class Kasir extends CI_Controller
 			"tr_kembalian" => $kembalian
 		];
 		$this->M_Transaksi->updateTransaksi($data_tr, $transaksi_id);
+
+		$data['grand_total'] = $grand_total;
 
 		$data['user_nama'] = $this->session->userdata('user_nama');
 		$data['titel'] = "Form Ubah Pembayaran";
@@ -621,6 +626,7 @@ class Kasir extends CI_Controller
 		$uang_status = $this->input->post('jenis_bayar');
 		$nom_bayar = str_replace('.', '', $this->input->post('nom_bayar'));
 		$diskon = str_replace('.', '', $this->input->post('diskon'));
+		$ppn = $this->input->post('ppn');
 		// if ($diskon_status == 1) {
 		// 	$diskon = $diskon * $transaksi['tr_total'] / 100;
 		// }
@@ -637,6 +643,7 @@ class Kasir extends CI_Controller
 			"tr_uang" => $uang,
 			"tr_diskon" => $diskon,
 			"tr_diskon_status" => $diskon_status,
+			"tr_ppn" => $ppn,
 			"tr_kembalian" => $uang,
 			"tr_uang_status" => $uang_status,
 			"tr_tgl_update" => $dtNow

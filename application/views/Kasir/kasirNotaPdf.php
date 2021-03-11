@@ -99,7 +99,10 @@
                 $diskon_fix = $transaksi['tr_diskon'] * $transaksi['tr_total'] / 100;
             }
 
-            $g_total = $transaksi['tr_total'] - $diskon_fix;
+            $dpp_total = $transaksi['tr_total'] - $diskon_fix;
+            $ppn_nom = $transaksi['tr_ppn'] * $dpp_total / 100;
+            $g_total = $dpp_total + $ppn_nom;
+
 
             if ($transaksi['tr_status_pembayaran'] == 4) {
                 $status_pembayaran = 'LUNAS';
@@ -125,8 +128,8 @@
             </tr>
             <tr>
                 <td colspan="3"></td>
-                <td colspan="2" style="border: 1px solid black; text-align:left">PPN </td>
-                <td style="border: 1px solid black; text-align:right"><?= money($total) ?></td>
+                <td colspan="2" style="border: 1px solid black; text-align:left">PPN <?= $transaksi['tr_ppn'] ?>% </td>
+                <td style="border: 1px solid black; text-align:right"><?= money($ppn_nom) ?></td>
             </tr>
             <tr>
                 <td style="text-align:center;"> (........................)</td>
@@ -151,7 +154,10 @@
                 $status_pembayaran = 'LUNAS';
             } else {
                 $status_pembayaran = 'BELUM LUNAS';
-            } ?>
+            }
+
+
+            ?>
 
             <tr>
                 <td width='25%'></td>
@@ -180,7 +186,7 @@
             </tr>
             <tr>
                 <td colspan='5'>
-                    <div style='text-align:right;'>PPN 10% : </div>
+                    <div style='text-align:right;'>PPN : </div>
                 </td>
                 <td style='text-align:right;' width='15%'>34.500</td>
             </tr>
@@ -237,7 +243,7 @@
 
     </center>
     <script>
-        // window.addEventListener("load", window.print());
+        window.addEventListener("load", window.print());
     </script>
 </body>
 
