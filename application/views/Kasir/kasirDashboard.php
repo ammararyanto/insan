@@ -94,7 +94,7 @@
 
             </div>
             <div class="modal fade" id="modal-pelanggan">
-                <form action=<?= base_url('kasir/inputTransaksi') ?> method="POST">
+                <form action="<?= base_url('kasir/inputTransaksi') ?>" method="POST">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">

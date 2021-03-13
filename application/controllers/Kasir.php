@@ -54,6 +54,18 @@ class Kasir extends CI_Controller
 		$p_nama = $this->input->post('p_nama');
 		$p_nohp = $this->input->post('p_nohp');
 
+		if ($p_nama) {
+		} else {
+			$this->session->set_flashdata('message', '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+         <strong>INPUT TRANSAKSI GAGAL!</strong> Nama Pelanggan Tidak boleh kosong         
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>');
+			redirect('Kasir');
+		}
+
+
 		// var_dump($p_id . $p_nama . $p_nohp);
 
 		$desain_id = $user['user_id'];
@@ -66,7 +78,7 @@ class Kasir extends CI_Controller
 		// var_dump($id_transaksi);
 		// exit();
 
-		$this->M_Transaksi->insertPelanggan($p_id, $p_nama, $p_nohp);
+		// $this->M_Transaksi->insertPelanggan($p_id, $p_nama, $p_nohp);
 
 		$this->M_Transaksi->insertTransaksi(
 			$transaksi_id,
@@ -79,6 +91,12 @@ class Kasir extends CI_Controller
 			$uang_status
 		);
 
+		$this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+         <strong>INPUT TRANSAKSI BERHASIL!</strong> Silahkan lengkapi data transaksi ' . $p_nama . ' pada form dibawah ini         
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>');
 		redirect('Kasir/ubahDetailTransaksi/' . $transaksi_id);
 	}
 
