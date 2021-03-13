@@ -41,6 +41,13 @@ class M_Transaksi extends CI_Model
 		];
 		$this->db->insert('tbl_pelanggan', $data);
 	}
+
+	function updatePelanggan($data_pl, $pelanggan_id)
+	{
+		$this->db->where('p_id', $pelanggan_id);
+		$this->db->update('tbl_pelanggan', $data_pl);
+	}
+
 	function insertTransaksi(
 		$transaksi_id,
 		$desain_id,
@@ -79,6 +86,7 @@ class M_Transaksi extends CI_Model
 		$this->db->where('tr_id', $transaksi_id);
 		$this->db->update('tbl_transaksi', $data_tr);
 	}
+
 
 	function insertDetailTransaksi(
 		$transaksi_id,

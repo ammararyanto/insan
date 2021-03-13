@@ -596,8 +596,10 @@ class Kasir extends CI_Controller
 
 		if ($data['transaksi']['tr_status_pembayaran'] == 4) {
 			$data['bayar_hidden'] = ' hidden';
+			$data['p_disabled'] = ' disabled';
 		} else {
 			$data['bayar_hidden'] = ' ';
+			$data['p_disabled'] = ' ';
 		}
 
 
@@ -653,6 +655,8 @@ class Kasir extends CI_Controller
 		$nom_bayar = str_replace('.', '', $this->input->post('nom_bayar'));
 		$diskon = str_replace('.', '', $this->input->post('diskon'));
 		$ppn = $this->input->post('ppn');
+		$nama = $this->input->post('nama');
+		$nohp = $this->input->post('nohp');
 		// if ($diskon_status == 1) {
 		// 	$diskon = $diskon * $transaksi['tr_total'] / 100;
 		// }
@@ -665,6 +669,14 @@ class Kasir extends CI_Controller
 
 		$dtNow = date('Y-m-d H:i:s', time());
 
+		$pelanggan_id = $transaksi['p_id'];
+		$data_pl = [
+			"p_nama" => $nama,
+			"p_nohp" => $nohp,
+		];
+		$this->M_Transaksi->updatePelanggan($data_pl, $pelanggan_id);
+
+		var_dump($transaksi);
 		$data_tr = [
 			"tr_uang" => $uang,
 			"tr_diskon" => $diskon,
@@ -672,9 +684,13 @@ class Kasir extends CI_Controller
 			"tr_ppn" => $ppn,
 			"tr_kembalian" => $uang,
 			"tr_uang_status" => $uang_status,
-			"tr_tgl_update" => $dtNow
+			"tr_tgl_update" => $dtNow,
+			"tr_tgl_update" => $dtNow,
+			"tr_tgl_update" => $dtNow,
 		];
 		$this->M_Transaksi->updateTransaksi($data_tr, $transaksi_id);
+
+
 
 		// var_dump($data_tr);
 		$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible fade show" role="alert">

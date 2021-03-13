@@ -13,150 +13,151 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12 mb-3">
-                    <a href="<?= base_url('kasir/transaksiBelumDiambil') ?>" class="btn btn-secondary mr-2 float-left"> <i class="fas fa-arrow-circle-left"></i> Kembali</a>
+            <form action="<?= base_url() ?>kasir/actionUbahPembayaran/<?= $transaksi['tr_id'] ?>" method="POST">
 
-                </div>
-                <div class="col-lg-12">
-                    <?= $this->session->flashdata('message'); ?>
-                </div>
-                <div class="col-lg-7">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Data Pelanggan</h3>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body py-2">
-                                    <div class="row">
-                                        <div class="col-lg-4 col-4">
-                                            <div class="form-group">
-                                                <label class="col-form-label-sm" for="nama">Nama Pelanggan</label>
-                                                <input type="text font-weight-bold" class="form-control uang_cash" id="uang_cash" name="uang_cash" value="<?= $transaksi['p_nama'] ?>" placeholder="0" disabled>
+                <div class="row">
+                    <div class="col-lg-12 mb-3">
+                        <a href="<?= base_url('kasir/transaksiBelumDiambil') ?>" class="btn btn-secondary mr-2 float-left"> <i class="fas fa-arrow-circle-left"></i> Kembali</a>
+
+                    </div>
+                    <div class="col-lg-12">
+                        <?= $this->session->flashdata('message'); ?>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Data Pelanggan</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body py-2">
+                                        <div class="row">
+                                            <div class="col-lg-4 col-4">
+                                                <div class="form-group">
+                                                    <label class="col-form-label-sm" for="nama">Nama Pelanggan</label>
+                                                    <input <?= $p_disabled ?> type="text font-weight-bold" class="form-control" id="" name="nama" value="<?= $transaksi['p_nama'] ?>" placeholder="0">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-4 col-4 ">
-                                            <div class="form-group">
-                                                <label class="col-form-label-sm" for="nama">Nomor HP</label>
-                                                <input type="text font-weight-bold" class="form-control uang_cash" id="uang_cash" name="uang_cash" value="<?= $transaksi['p_nohp'] ?>" placeholder="0" disabled>
+                                            <div class="col-lg-4 col-4 ">
+                                                <div class="form-group">
+                                                    <label class="col-form-label-sm" for="nama">Nomor HP</label>
+                                                    <input <?= $p_disabled ?> type="text font-weight-bold" class="form-control" id="" name="nohp" value="<?= $transaksi['p_nohp'] ?>" placeholder="0">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-4 col-4">
-                                            <div class="form-group">
-                                                <label class="col-form-label-sm" for="nama">Status Transaksi</label>
-                                                <input type="text font-weight-bold" class="form-control uang_cash" id="uang_cash" name="uang_cash" value="<?= $transaksi['s_tr_nama'] ?>" placeholder="0" disabled>
+                                            <div class="col-lg-4 col-4">
+                                                <div class="form-group">
+                                                    <label class="col-form-label-sm" for="nama">Status Transaksi</label>
+                                                    <input type="text font-weight-bold" class="form-control" id="" name="" value="<?= $transaksi['s_tr_nama'] ?>" placeholder="0" disabled>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- /.card-body -->
                                 </div>
-                                <!-- /.card-body -->
                             </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Detail Transaksi</h3>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-12 mb-3" <?= $form_hidden ?>>
-                                            <a href="<?= base_url() ?>kasir/ubahDetailTransaksi/<?= $transaksi_id ?>" class="btn btn-primary mr-2 float-left"><i class="fas fa-shopping-cart"></i> Ubah Detail Transaksi</a>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="overflow-auto" style="overflow-x:auto;">
-                                                <table id="example1" class="table table-bordered table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>No</th>
-                                                            <th>Nama Layanan</th>
-                                                            <th>Nama File</th>
-                                                            <th>Panjang</th>
-                                                            <th>Lebar</th>
-                                                            <th style="width: 5%;">Jumlah Cetak(pcs)</th>
-                                                            <th>Harga Satuan</th>
-                                                            <th>Total Harga</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <?php
-                                                    $no = 0;
-                                                    foreach ($data_dtr as $dtr) {
-                                                        $no = $no + 1;
-                                                        if ($dtr['barang_satuan'] == 1) {
-                                                            $panjang = $dtr['dtr_panjang'];
-                                                            $lebar = $dtr['dtr_lebar'];
-                                                        } else {
-                                                            $panjang = '-';
-                                                            $lebar = '-';
-                                                        }
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Detail Transaksi</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12 mb-3" <?= $form_hidden ?>>
+                                                <a href="<?= base_url() ?>kasir/ubahDetailTransaksi/<?= $transaksi_id ?>" class="btn btn-primary mr-2 float-left"><i class="fas fa-shopping-cart"></i> Ubah Detail Transaksi</a>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="overflow-auto" style="overflow-x:auto;">
+                                                    <table id="example1" class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No</th>
+                                                                <th>Nama Layanan</th>
+                                                                <th>Nama File</th>
+                                                                <th>Panjang</th>
+                                                                <th>Lebar</th>
+                                                                <th style="width: 5%;">Jumlah Cetak(pcs)</th>
+                                                                <th>Harga Satuan</th>
+                                                                <th>Total Harga</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <?php
+                                                        $no = 0;
+                                                        foreach ($data_dtr as $dtr) {
+                                                            $no = $no + 1;
+                                                            if ($dtr['barang_satuan'] == 1) {
+                                                                $panjang = $dtr['dtr_panjang'];
+                                                                $lebar = $dtr['dtr_lebar'];
+                                                            } else {
+                                                                $panjang = '-';
+                                                                $lebar = '-';
+                                                            }
 
-                                                        if ($dtr['barang_satuan'] == 3) {
-                                                            $jumlah = '-';
-                                                        } else {
-                                                            $jumlah = $dtr['dtr_jumlah'];
-                                                        }
+                                                            if ($dtr['barang_satuan'] == 3) {
+                                                                $jumlah = '-';
+                                                            } else {
+                                                                $jumlah = $dtr['dtr_jumlah'];
+                                                            }
 
-                                                        if ($dtr['dtr_nama_file']) {
-                                                            $nama_file = $dtr['dtr_nama_file'];
-                                                        } else {
-                                                            $nama_file = '-';
-                                                        }
+                                                            if ($dtr['dtr_nama_file']) {
+                                                                $nama_file = $dtr['dtr_nama_file'];
+                                                            } else {
+                                                                $nama_file = '-';
+                                                            }
 
-                                                    ?>
-                                                        <tr>
-                                                            <td> <?= $no ?></td>
-                                                            <td> <?= $dtr['barang_nama'] ?></td>
-                                                            <td> <?= $nama_file ?></td>
-                                                            <td class="text-center"> <?= $panjang ?></td>
-                                                            <td class="text-center"> <?= $lebar ?></td>
-                                                            <td class="text-center"> <?= $jumlah ?></td>
-                                                            <td class="text-right"> <?= money($dtr['dtr_harga'])  ?></td>
-                                                            <td class="text-right"> <?= money($dtr['dtr_total'])  ?></td>
-                                                        </tr>
-                                                    <?php } ?>
+                                                        ?>
+                                                            <tr>
+                                                                <td> <?= $no ?></td>
+                                                                <td> <?= $dtr['barang_nama'] ?></td>
+                                                                <td> <?= $nama_file ?></td>
+                                                                <td class="text-center"> <?= $panjang ?></td>
+                                                                <td class="text-center"> <?= $lebar ?></td>
+                                                                <td class="text-center"> <?= $jumlah ?></td>
+                                                                <td class="text-right"> <?= money($dtr['dtr_harga'])  ?></td>
+                                                                <td class="text-right"> <?= money($dtr['dtr_total'])  ?></td>
+                                                            </tr>
+                                                        <?php } ?>
 
-                                                </table>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
+
                                     </div>
 
+                                    <!-- /.card-body -->
                                 </div>
-
-                                <!-- /.card-body -->
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-5">
-                    <div class="card">
-                        <div class="ribbon-wrapper ribbon-lg" <?= $r_belum ?>>
-                            <div class="ribbon bg-info">
-                                Belum Lunas
+                    <div class="col-lg-5">
+                        <div class="card">
+                            <div class="ribbon-wrapper ribbon-lg" <?= $r_belum ?>>
+                                <div class="ribbon bg-info">
+                                    Belum Lunas
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="ribbon-wrapper ribbon-lg" <?= $r_hutang ?>>
-                            <div class="ribbon bg-warning text-lg">
-                                Hutang
+                            <div class="ribbon-wrapper ribbon-lg" <?= $r_hutang ?>>
+                                <div class="ribbon bg-warning text-lg">
+                                    Hutang
+                                </div>
                             </div>
-                        </div>
-                        <div class="ribbon-wrapper ribbon-lg" <?= $r_lunas ?>>
-                            <div class="ribbon bg-success text-lg">
-                                Lunas
+                            <div class="ribbon-wrapper ribbon-lg" <?= $r_lunas ?>>
+                                <div class="ribbon bg-success text-lg">
+                                    Lunas
+                                </div>
                             </div>
-                        </div>
 
 
 
-                        <div class="card-header">
-                            <h3 class="card-title"> Form Pembayaran</h3>
+                            <div class="card-header">
+                                <h3 class="card-title"> Form Pembayaran</h3>
 
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <form action="<?= base_url() ?>kasir/actionUbahPembayaran/<?= $transaksi['tr_id'] ?>" method="POST">
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
                                 <div class="row my-2">
                                     <div class="col-lg-4 col-4">
                                         <div class="callout callout-info py-1">
@@ -297,18 +298,19 @@
 
                                     </div>
                                 </div>
-                            </form>
+
+                            </div>
+
+                            <!-- /.card-body -->
                         </div>
 
-                        <!-- /.card-body -->
                     </div>
 
                 </div>
 
-            </div>
-
 
         </div>
+        </form>
     </section>
     <!-- /.content -->
 </div>
