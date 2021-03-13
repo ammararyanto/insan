@@ -78,7 +78,7 @@ class Kasir extends CI_Controller
 		// var_dump($id_transaksi);
 		// exit();
 
-		// $this->M_Transaksi->insertPelanggan($p_id, $p_nama, $p_nohp);
+		$this->M_Transaksi->insertPelanggan($p_id, $p_nama, $p_nohp);
 
 		$this->M_Transaksi->insertTransaksi(
 			$transaksi_id,
