@@ -16,7 +16,8 @@
             <div class="row">
                 <div class="col-lg-12 mb-3">
                     <a href="<?= base_url('Laporan') ?>" class="btn btn-secondary mr-2 float-left"> <i class="fas fa-arrow-circle-left"></i> Kembali</a>
-
+                    <input type="text" class="form-control" id="timeStart" placeholder="" hidden>
+                    <input type="text" class="form-control" id="timeEnd" placeholder="" hidden>
                 </div>
                 <div class="col-md-12">
                     <?= $this->session->flashdata('message'); ?>
@@ -44,7 +45,7 @@
                                             <a href="#" class="btn btn-primary float-left mr-2" onclick="pembelianHariIni()"> <i class="fas fa-calendar-day"></i> Hari Ini</a>
                                             <a href="#" class="btn btn-primary float-left mr-2" onclick="pembelianBulanIni()"> <i class="fas fa-calendar-alt"></i>1 Bulan Kebelakang</a>
                                             <a href="#" class="btn btn-primary float-left mr-2" onclick="tampilFormWaktu()"> <i class="fas fa-calendar"></i> Waktu Custom</a>
-                                            <a href="<?= base_url('Laporan/') ?>" class="btn btn-success float-left mr-2"> <i class="fas fa-file-excel"></i> Download</a>
+                                            <a href="#" class="btn btn-success float-left mr-2" onclick="printExcel()"> <i class="fas fa-file-excel"></i> Download</a>
                                         </div>
                                     </div>
                                     <div class="row" id="view_tabel">
@@ -151,19 +152,33 @@
     function pembelianHariIni() {
         var time1 = "<?= $timeToday ?>";
         var time2 = "<?= $timeToday ?>";
+        $('#timeStart').val(time1);
+        $('#timeEnd').val(time2);
         viewListPembelian(time1, time2)
     }
 
     function pembelianBulanIni() {
         var time1 = "<?= $time1MonthBefore  ?>";
         var time2 = "<?= $timeToday ?>";
+        $('#timeStart').val(time1);
+        $('#timeEnd').val(time2);
         viewListPembelian(time1, time2)
     }
 
     function pembelianCustom() {
         var time1 = document.getElementById('tgl_awal').value;
         var time2 = document.getElementById('tgl_akhir').value;
+        $('#timeStart').val(time1);
+        $('#timeEnd').val(time2);
         $('#modal-waktu').modal('hide');
         viewListPembelian(time1, time2)
+    }
+
+    function printExcel() {
+        var time1 = document.getElementById('timeStart').value;
+        var time2 = document.getElementById('timeEnd').value;
+
+        // window.load('<?= base_url() ?>admin/gudang/excelBarangKeluar/' + time1 + '/' + time2, '_blank');
+        window.location.href = "<?= base_url() ?>laporan/excelPembelian/" + time1 + '/' + time2;
     }
 </script>

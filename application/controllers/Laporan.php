@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class Laporan extends CI_Controller
 {
     function __construct()
@@ -914,5 +917,191 @@ class Laporan extends CI_Controller
         $dtTimeEnd =  date('Y-m-d 23:59:59', strtotime($tgl_akhir));
 
         var_dump($dtTimeStart . ' === ' . $dtTimeEnd);
+    }
+    function excelPembelian($tgl1, $tgl2)
+    {
+        $data_pembelian = $this->M_barang->getLaporanPembelian($tgl1, $tgl2);
+
+
+        $indo_tgl1 = date_indo($tgl1);
+        $indo_tgl2 = date_indo($tgl2);
+
+        if ($tgl1 == $tgl2) {
+            $tanggal = $indo_tgl1;
+        } else {
+            $tanggal = $indo_tgl1 . ' - ' . $indo_tgl2;
+        }
+
+        // ============================== START STYLING CELL ==================================
+
+        $style_title = array(
+            'font' => [
+                'bold' => true,
+                'size' => 15
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            ]
+        );
+
+        $style_date = array(
+            'font' => [
+                'bold' => false,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            ]
+        );
+
+        $style_head = array(
+            'font' => [
+                'bold' => true,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            ],
+            'borders' => [
+                'top' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'bottom' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'left' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'right' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ]
+        );
+        // ---------------------------------- END STYLING CELL --------------------------------
+
+        $style_row = array(
+            'font' => [
+                'bold' => false,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+            ],
+            'borders' => [
+                'top' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'bottom' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'left' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'right' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ]
+        );
+
+        $style_money = array(
+            'font' => [
+                'bold' => false,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+            ],
+            'borders' => [
+                'top' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'bottom' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'left' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+                'right' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+            'numberFormat' => [
+                'formatCode' => '#,##0'
+            ]
+        );
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+        $sheet->getColumnDimension('E')->setAutoSize(true);
+        $sheet->getColumnDimension('F')->setAutoSize(true);
+
+
+        $sheet->mergeCells('A1:F1');
+        $sheet->getStyle('A1')->applyFromArray($style_title);
+        $sheet->setCellValue('A1', 'Daftar Pembelian Barang');
+
+        $sheet->mergeCells('A2:F2');
+        $sheet->getStyle('A2')->applyFromArray($style_date);
+        $sheet->setCellValue('A2', $tanggal);
+
+
+        $sheet->getStyle('A4')->applyFromArray($style_head);
+        $sheet->getStyle('B4')->applyFromArray($style_head);
+        $sheet->getStyle('C4')->applyFromArray($style_head);
+        $sheet->getStyle('D4')->applyFromArray($style_head);
+        $sheet->getStyle('E4')->applyFromArray($style_head);
+        $sheet->getStyle('F4')->applyFromArray($style_head);
+
+
+        $sheet->setCellValue('A4', 'No');
+        $sheet->setCellValue('B4', 'Tanggal');
+        $sheet->setCellValue('C4', 'Nama Barang');
+        $sheet->setCellValue('D4', 'Jumlah');
+        $sheet->setCellValue('E4', 'Satuan');
+        $sheet->setCellValue('F4', 'Biaya');
+
+        // ================= Loop list data ==========================
+        $no = 1;
+        $x = 5;
+        $total_pembelian = 0;
+        foreach ($data_pembelian as $dp) {
+            $total_pembelian = $total_pembelian + $dp['bm_biaya'];
+            $ts_masuk = strtotime($dp['bm_tanggal_masuk']);
+            $dt_masuk = date('Y-m-d', $ts_masuk);
+            $tgl_masuk = date_indo($dt_masuk);
+
+            $biaya = money($dp['bm_biaya']);
+
+            $sheet->getStyle('A' . $x)->applyFromArray($style_row);
+            $sheet->getStyle('B' . $x)->applyFromArray($style_row);
+            $sheet->getStyle('C' . $x)->applyFromArray($style_row);
+            $sheet->getStyle('D' . $x)->applyFromArray($style_row);
+            $sheet->getStyle('E' . $x)->applyFromArray($style_row);
+            $sheet->getStyle('F' . $x)->applyFromArray($style_money);
+
+            $sheet->setCellValue('A' . $x, $no++);
+            $sheet->setCellValue('B' . $x, $tgl_masuk);
+            $sheet->setCellValue('C' . $x, $dp['bm_nama']);
+            $sheet->setCellValue('D' . $x, $dp['bm_jumlah']);
+            $sheet->setCellValue('E' . $x, $dp['bm_satuan']);
+            $sheet->setCellValue('F' . $x, $dp['bm_biaya']);
+            $x++;
+        }
+
+        // ===================== SUM Operation ===========================
+        $sheet->getStyle('E' . $x)->applyFromArray($style_head);
+        $sheet->getStyle('F' . $x)->applyFromArray($style_money);
+
+        $sheet->setCellValue('E' . $x, 'Total');
+        $sheet->setCellValue('F' . $x, $total_pembelian);
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Laporan Pembelian ' . $tgl1 . ' sampai ' . $tgl2;
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
     }
 }

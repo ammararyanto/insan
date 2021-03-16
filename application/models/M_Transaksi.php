@@ -193,6 +193,21 @@ class M_Transaksi extends CI_Model
 		return $this->db->get()->result_array();
 	}
 
+	function getTransaksiSudahDiambilByTime($tgl_awal, $tgl_akhir)
+	{
+		$dtTimeStart =  date('Y-m-d H:i:s', strtotime($tgl_awal));
+		$dtTimeEnd =  date('Y-m-d 23:59:59', strtotime($tgl_akhir));
+		$this->db->select("*");
+		$this->db->from("tbl_transaksi");
+		$this->db->where('tr_status_pengerjaan', 2);
+		$this->db->where('tr_tgl_selesai between "' . $dtTimeStart . '" and "' . $dtTimeEnd . '"');
+		$this->db->join('tbl_status_transaksi', 'tbl_status_transaksi.s_tr_id = tbl_transaksi.tr_status_pengerjaan');
+		$this->db->join('tbl_status_pembayaran', 'tbl_status_pembayaran.s_pmb_id = tbl_transaksi.tr_status_pembayaran');
+		$this->db->join('tbl_pelanggan', 'tbl_pelanggan.p_id= tbl_transaksi.tr_pelanggan_id');
+		// $this->db->order_by('tr_tgl_masuk', 'ASC');
+		return $this->db->get()->result_array();
+	}
+
 	function getLaporanTransaksi($tgl_awal, $tgl_akhir, $s_bayar)
 	{
 		$dtTimeStart =  date('Y-m-d H:i:s', strtotime($tgl_awal));
@@ -210,10 +225,16 @@ class M_Transaksi extends CI_Model
 
 	public function getAwalBulan()
 	{
+		// setiap tanggal 10 pada bulan ini
+
+
+
 	}
 
 	public function getAkhirBulan()
 	{
+		// setiap tanggal 9 pada bulan ini
+
 	}
 
 	function getDatesFromRange($start, $end, $format = 'Y-m-d')
