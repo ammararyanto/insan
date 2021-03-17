@@ -215,7 +215,11 @@ class M_Transaksi extends CI_Model
 		$this->db->select("*");
 		$this->db->from("tbl_transaksi");
 		$this->db->where('tr_status_pembayaran', $s_bayar);
-		$this->db->where('tr_tgl_selesai between "' . $dtTimeStart . '" and "' . $dtTimeEnd . '"');
+		if ($s_bayar == 4) {
+			$this->db->where('tr_tgl_bayar between "' . $dtTimeStart . '" and "' . $dtTimeEnd . '"');
+		} else {
+			$this->db->where('tr_tgl_selesai between "' . $dtTimeStart . '" and "' . $dtTimeEnd . '"');
+		}
 		$this->db->join('tbl_status_transaksi', 'tbl_status_transaksi.s_tr_id = tbl_transaksi.tr_status_pengerjaan');
 		$this->db->join('tbl_status_pembayaran', 'tbl_status_pembayaran.s_pmb_id = tbl_transaksi.tr_status_pembayaran');
 		$this->db->join('tbl_pelanggan', 'tbl_pelanggan.p_id= tbl_transaksi.tr_pelanggan_id');
@@ -265,7 +269,8 @@ class M_Transaksi extends CI_Model
 	{
 		$this->db->select("*");
 		$this->db->from("tbl_transaksi");
-		$this->db->where('tr_tgl_selesai like', $tanggal . '%');
+		$this->db->where('tr_status_pembayaran', 4);
+		$this->db->where('tr_tgl_bayar like', $tanggal . '%');
 		return $this->db->get()->result_array();
 	}
 

@@ -16,8 +16,8 @@
             <div class="row">
                 <div class="col-lg-12 mb-3">
                     <a href="<?= base_url('Laporan') ?>" class="btn btn-secondary mr-2 float-left"> <i class="fas fa-arrow-circle-left"></i> Kembali</a>
-                    <input type="text" class="form-control" id="timeStart" placeholder="" hidden>
-                    <input type="text" class="form-control" id="timeEnd" placeholder="" hidden>
+                    <input value="<?= $time1MonthBefore ?>" type="text" class="form-control" id="timeStart" placeholder="" hidden>
+                    <input value="<?= $timeToday ?>" type="text" class="form-control" id="timeEnd" placeholder="" hidden>
                 </div>
                 <div class="col-md-12">
                     <?= $this->session->flashdata('message'); ?>

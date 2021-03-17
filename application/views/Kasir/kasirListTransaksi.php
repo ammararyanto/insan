@@ -160,6 +160,7 @@
 
                 <!-- /.modal-dialog -->
             </div>
+        </div>
     </section>
     <!-- /.content -->
 </div>

@@ -35,7 +35,8 @@
                 <b><span style='font-size:20pt'>NOTA PENJUALAN</span></b></br>
                 No Trans : <?= $transaksi['tr_id'] ?></br>
                 Customer : <?= $transaksi['p_nama'] ?></br>
-                No Telp : <?= $transaksi['p_nohp'] ?>
+                No Telp : <?= $transaksi['p_nohp'] ?></br>
+                Tanggal : <?= $tgl_today ?>
             </td>
         </table>
         <table style='width:700px; font-size:12pt; font-family:calibri; border-collapse: collapse;' border='0'>

@@ -486,8 +486,8 @@ class Kasir extends CI_Controller
                                             <td class="text-center"> ' . $panjang . '</td>
                                             <td class="text-center"> ' . $lebar . '</td>
                                             <td class="text-center"> ' . $jumlah . '</td>
-                                            <td class="text-right"> ' . $dtr['dtr_harga'] . '</td>
-                                            <td class="text-right"> ' . $dtr['dtr_total'] . '</td>
+                                            <td class="text-right"> ' . money($dtr['dtr_harga'])  . '</td>
+                                            <td class="text-right"> ' . money($dtr['dtr_total'])  . '</td>
                                         </tr>';
 		}
 		$output .= '        </table></div>
@@ -613,10 +613,8 @@ class Kasir extends CI_Controller
 		}
 
 		if ($data['transaksi']['tr_status_pembayaran'] == 4) {
-			$data['bayar_hidden'] = ' hidden';
 			$data['p_disabled'] = ' disabled';
 		} else {
-			$data['bayar_hidden'] = ' ';
 			$data['p_disabled'] = ' ';
 		}
 
@@ -652,8 +650,12 @@ class Kasir extends CI_Controller
 		}
 
 		$data['form_hidden'] = '';
+		$data['bayar_hidden'] = '';
+		$data['p_disabled'] = ' ';
 		if ($data['transaksi']['tr_status_pengerjaan'] == 2) {
 			$data['form_hidden'] = ' hidden';
+			$data['bayar_hidden'] = ' hidden';
+			$data['p_disabled'] = ' disabled';
 		}
 
 		$this->load->view('Admin/header', $data);
@@ -694,7 +696,7 @@ class Kasir extends CI_Controller
 		];
 		$this->M_Transaksi->updatePelanggan($data_pl, $pelanggan_id);
 
-		var_dump($transaksi);
+		// var_dump($transaksi);
 		$data_tr = [
 			"tr_uang" => $uang,
 			"tr_diskon" => $diskon,
@@ -703,8 +705,7 @@ class Kasir extends CI_Controller
 			"tr_kembalian" => $uang,
 			"tr_uang_status" => $uang_status,
 			"tr_tgl_update" => $dtNow,
-			"tr_tgl_update" => $dtNow,
-			"tr_tgl_update" => $dtNow,
+			"tr_tgl_bayar" => $dtNow,
 		];
 		$this->M_Transaksi->updateTransaksi($data_tr, $transaksi_id);
 
@@ -899,6 +900,10 @@ class Kasir extends CI_Controller
 		// $transaksi_id = 'T210309001';
 		$data['transaksi'] = $this->M_Transaksi->getTransaksiByIdRow($transaksi_id);
 		$data['detail_transaksi'] = $this->M_Transaksi->getDetailTransaksiById($transaksi_id);
+
+		$dt_today = date('Y-m-d', time());
+		$tgl_today = date_indo($dt_today);
+		$data['tgl_today'] = $tgl_today;
 		$this->load->view('Kasir/kasirNotaPdf', $data);
 	}
 }
