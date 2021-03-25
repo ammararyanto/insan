@@ -638,7 +638,7 @@ class Kasir extends CI_Controller
 		}
 
 		$data['done_hidden'] = ' hidden';
-		$data['print_hidden'] = ' hidden';
+		$data['print_hidden'] = ' ';
 		if ($data['transaksi']['tr_status_pengerjaan'] == 2) {
 			$data['done_hidden'] = ' ';
 			$data['print_hidden'] = ' ';
