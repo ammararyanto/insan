@@ -652,7 +652,7 @@ class Kasir extends CI_Controller
 		$data['form_hidden'] = '';
 		$data['bayar_hidden'] = '';
 		$data['p_disabled'] = ' ';
-		if ($data['transaksi']['tr_status_pengerjaan'] == 2) {
+		if ($data['transaksi']['tr_status_pengerjaan'] == 2 &&  $data['transaksi']['tr_status_pembayaran'] == 4) {
 			$data['form_hidden'] = ' hidden';
 			$data['bayar_hidden'] = ' hidden';
 			$data['p_disabled'] = ' disabled';
