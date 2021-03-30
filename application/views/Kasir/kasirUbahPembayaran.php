@@ -18,6 +18,7 @@
                 <div class="row">
                     <div class="col-lg-12 mb-3">
                         <a href="<?= base_url('kasir/transaksiBelumDiambil') ?>" class="btn btn-secondary mr-2 float-left"> <i class="fas fa-arrow-circle-left"></i> Kembali</a>
+                        <a <?= $hapus_hidden ?> href="<?= base_url('kasir/hapusTransaksi/') . $transaksi['tr_id'] ?>" class="btn btn-danger mr-2 float-right konfirmasi-hapus"> <i class="fas fa-trash-alt"></i> Hapus Transaksi</a>
 
                     </div>
                     <div class="col-lg-12">
@@ -331,6 +332,8 @@
 <script type="text/javascript" src="<?php echo base_url() . 'assets/js/moment.min.js'; ?>"></script>
 <script type="text/javascript" src="<?php echo base_url() . 'assets/js/bootstrap.min.js'; ?>"></script>
 <script type="text/javascript" src="<?php echo base_url() . 'assets/jquery.price_format.min.js' ?>"></script>
+<script src="<?php echo base_url(); ?>assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+
 
 <script>
     $(function() {
@@ -347,5 +350,26 @@
             centsLimit: 0,
             thousandsSeparator: '.',
         });
+    });
+</script>
+
+<script>
+    $('.konfirmasi-hapus').on('click', function(e) {
+        // alert('terpencet');
+        e.preventDefault();
+        const href = $(this).attr('href');
+        Swal.fire({
+            title: 'Apakah anda yakin?',
+            text: "Akan menghapus transaksi atas nama <?= $transaksi['p_nama'] ?>",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.location.href = href;
+            }
+        })
     });
 </script>

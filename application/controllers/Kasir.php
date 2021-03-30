@@ -658,6 +658,11 @@ class Kasir extends CI_Controller
 			$data['p_disabled'] = ' disabled';
 		}
 
+		$data['hapus_hidden'] = ' ';
+		if ($data['transaksi']['tr_status_pengerjaan'] == 2 && $data['transaksi']['tr_status_pembayaran'] == 4) {
+			$data['hapus_hidden'] = ' hidden';
+		}
+
 		$this->load->view('Admin/header', $data);
 		$this->load->view('Admin/Menu', $data);
 		$this->load->view('Kasir/kasirUbahPembayaran', $data);
@@ -905,5 +910,24 @@ class Kasir extends CI_Controller
 		$tgl_today = date_indo($dt_today);
 		$data['tgl_today'] = $tgl_today;
 		$this->load->view('Kasir/kasirNotaPdf', $data);
+	}
+
+	function hapusTransaksi($transaksi_id)
+	{
+		$transaksi = $this->M_Transaksi->getTransaksiByIdRow($transaksi_id);
+
+		echo $transaksi_id;
+		$data_tr = [
+			"tr_status_pengerjaan" => 9,
+			"tr_status_pembayaran" => 9,
+		];
+		$this->M_Transaksi->updateTransaksi($data_tr, $transaksi_id);
+		$this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+         <strong>Terima Kasih</strong> Transaksi atas nama ' . $transaksi['p_nama'] . ' nama berhasil dihapus        
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>');
+		redirect('Kasir');
 	}
 }
